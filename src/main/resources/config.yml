@@ -1,0 +1,129 @@
+
+# -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+# o0o - KeepMyLife -
+# o0o
+# o0o (c) Anh Craft
+# -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+
+# language (available: en-uk, vi)
+lang: en-uk
+
+# plugin's message prefix
+prefix: "&b[KML] "
+
+# time ended the morning and start the evening (WARNING: no afternoon)
+# WARNING: this plugin uses Minecraft ticks
+#
+# 1000: Time when using the /time set day command.
+# 6000: Noon; the sun is at its zenith.
+# 13000: Time when using the /time set night command.
+# 18000: Midnight; the moon is at its zenith.
+#
+# http://minecraft.gamepedia.com/Day-night_cycle
+time_begin_night: 13000
+
+# an interval time between checks
+check_daynight_interval: 20 # 1 second
+
+
+
+# keep rune
+# a rune which keeps the life of a player one time!
+# after used, the rune will be removed
+keep_rune:
+  enable: true
+
+  # a chat message to send to the player when a keep rune was used
+  message: "&aYour life was saved by keep rune :D"
+
+  # a title message to send to the player when a keep rune was used
+  title:
+    enable: false
+    title: "&aWelcome back!"
+    subtitle: "&6Used keep rune"
+
+  # an action bar message to send to the player when a keep rune was used
+  actionbar:
+    enable: false
+    message: ""
+
+  item:
+    name: "&a&lKeep &e&lRune"
+    material: EMERALD
+    durability: 0
+    lores:
+    - "&fA useful rune will keep your life one time!"
+    - "&cJust put this item in your inventory"
+    - "&f"
+    - "&f-= KeepMylife =-"
+    enchants:
+    - DURABILITY:1
+    unbreakable: true
+    hide_unbreakable: true
+    hide_enchants: true
+
+    # NBT Tag to determine an item is a keep rune
+    # Don't change this if your players've already used keep runes
+    nbt_tag: "keepmylife_keeprune"
+
+
+
+# keep items of players depends on the time of their world
+keep_items_dayNight:
+  enable: true
+
+  keep_day: true # enable keep in day
+  keep_night: false # enable keep at night
+
+  # sound
+  sound:
+    day:
+      enable: true
+      # the sound after 1.8 changed so there are two options:
+      v1_8: "FIREWORK_TWINKLE"
+      other: "ENTITY_FIREWORK_TWINKLE"
+    night:
+      enable: true
+      # the sound after 1.8 changed so there are two options:
+      v1_8: "ENDERDRAGON_GROWL"
+      other: "ENTITY_ENDERDRAGON_AMBIENT"
+
+  # list of world which you want to use this feature
+  worlds:
+    - "world"
+    # - "example"
+    # - "server"
+    # - "survival"
+
+  # chat messages to broadcast to anyone in the world
+  messages:
+    begin_day: "&6Now is the morning, keeping all player's items in &c<world> &6world!"
+    begin_night: "&6Now is the evening, non-keeping all player's items in &c<world> &6world!"
+
+  # title messages to send to anyone in the world
+  title:
+    enable: true
+    delay: 20 # 1 second
+    begin_day:
+      title: "&aNow is the morning!"
+      subtitle: "&fKeep all player's items :)"
+    begin_night:
+      title: "&aNow is the evening!"
+      subtitle: "&fNon-keep all player's items :("
+
+  # action bar messages to send to anyone in the world
+  actionbar:
+    enable: false
+    delay: 20 # 1 second
+    begin_day: "&cKeep item!"
+    begin_night: "&cNon-keep item!"
+
+
+
+# always keep items of players
+keep_items:
+  enable: true
+  permission: "keepmylife.keepitems"
+  # list of world which you want to use this feature
+  world_whitelist:
+  - world_the_end

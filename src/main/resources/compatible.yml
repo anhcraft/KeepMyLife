@@ -1,0 +1,22 @@
+# This config file allow you to change how does this plugin work
+# It will make this plugin compatible with another plugin
+# Only works if this plugin didn't hook to DeathDropsAPI
+# Example:
+# - Another plugin in your server interferes in keep
+# - When player dies, they have their items in inventory and also their items drop in ground
+# - Disable death_drop_items, the bug fixed
+
+# enables this option to allow the plugin drops a specific item of the player
+# doesn't work if that item was protected, such as when keep rune work
+death_drop_items: true
+
+# enables this option to allow the plugin clears player's inventory after drops the items
+# doesn't work if that item was protected, such as when keep rune work
+death_clear_inventory_after_drop: true
+
+# enables this option to allow the plugin disables PlayerDeathEvent (a Bukkit event)
+# it means that this plugin use a custom death drops
+death_keep_inventory: true
+
+# enables this option to keeps the experience of the player
+death_keep_exp: true

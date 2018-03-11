@@ -1,0 +1,13 @@
+name: KeepMyLife
+version: 1.1.8
+main: org.anhcraft.keepmylife.KeepMyLife
+authors: [anhcraft]
+depend: [SpaciousLib]
+loadafter: [DeathDropsAPI,SpaciousLib]
+softdepend: [DeathDropsAPI]
+description: Keep your life with KeepMyLife plugin
+website: https://anhcraft.org/
+commands:
+  kml:
+    description: 'KeepMyLife'
+    aliases: [keep, keepmylife]
