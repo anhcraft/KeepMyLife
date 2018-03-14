@@ -14,10 +14,8 @@ public final class KeepPlayerItemEvent extends Event {
     private KeepReason reason;
     private Player p;
     private boolean keep;
-    private boolean cancel = false;
 
-    public KeepPlayerItemEvent(Player player, List<ItemStack> drops, Boolean keep,
-                               KeepReason reason) {
+    public KeepPlayerItemEvent(Player player, List<ItemStack> drops, Boolean keep, KeepReason reason) {
         this.p = player;
         this.keep = keep;
         this.drops = drops;

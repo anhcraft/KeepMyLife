@@ -1,5 +1,6 @@
 package org.anhcraft.keepmylife;
 
+import org.anhcraft.keepmylife.listeners.KeepItemFilter;
 import org.anhcraft.keepmylife.listeners.KeepRune;
 import org.anhcraft.keepmylife.listeners.PlayerDeathDeathDropsAPI;
 import org.anhcraft.keepmylife.listeners.PlayerDeathDefault;
@@ -39,6 +40,7 @@ public final class KeepMyLife extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new PlayerDeathDefault(), this);
         }
         getServer().getPluginManager().registerEvents(new KeepRune(), this);
+        getServer().getPluginManager().registerEvents(new KeepItemFilter(), this);
         getServer().getPluginManager().registerEvents(new Updater1501986116("1501986116", this), this);
     }
 

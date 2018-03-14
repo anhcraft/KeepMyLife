@@ -16,24 +16,20 @@ public class PlayerDeathDeathDropsAPI implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathDropEvent e) {
         Player p = e.getPlayer();
-        if(Configuration.config.getBoolean("keep_items.enable")) {
-            if(PlayerDeath.isPlayerInSpecialWorld(p)) {
-                if(p.hasPermission(Configuration.config.getString("keep_items.permission"))
-                        || p.isOp()) {
-                    KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p,
-                            Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList())
-                            , true,
-                            KeepReason.Whitelist);
-                    Bukkit.getPluginManager().callEvent(ev);
+        if(Configuration.config.getBoolean("keep_items_whitelist.enable")) {
+            if(PlayerDeath.checkWhitelistedWorld(p)) {
+                KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p,
+                        Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList()), true,
+                        KeepReason.Whitelist);
+                Bukkit.getPluginManager().callEvent(ev);
 
-                    if(!ev.isKeep()) {
-                        if(ev.getDrops().contains(e.getItem())){
-                            e.setCancelled(false);
-                        } else {
-                            e.setCancelled(true);
-                        }
-                        return;
+                if(!ev.isKeep()) {
+                    if(ev.getDrops().contains(e.getItem())){
+                        e.setCancelled(false);
+                    } else {
+                        e.setCancelled(true);
                     }
+                    return;
                 }
                 return;
             }

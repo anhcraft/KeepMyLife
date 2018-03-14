@@ -11,11 +11,13 @@ import java.util.List;
 public class PlayerDeath {
     public static List<World> listWorldsKeep = new ArrayList<>();
 
-    static boolean isPlayerInSpecialWorld(Player p) {
+    static boolean checkWhitelistedWorld(Player p) {
         Boolean t = false;
-        for(String w : Configuration.config.getStringList("keep_items.world_whitelist")){
-            if(p.getWorld().equals(Bukkit.getServer().getWorld(w))){
+        for(String w : Configuration.config.getStringList("keep_items_whitelist.worlds")){
+            if(p.hasPermission(w.split(" ")[0]) &&
+                    p.getWorld().equals(Bukkit.getServer().getWorld(w.split(" ")[1]))){
                 t = true;
+                break;
             }
         }
         return t;

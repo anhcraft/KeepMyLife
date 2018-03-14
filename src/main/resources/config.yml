@@ -97,8 +97,8 @@ keep_items_dayNight:
 
   # chat messages to broadcast to anyone in the world
   messages:
-    begin_day: "&6Now is the morning, keeping all player's items in &c<world> &6world!"
-    begin_night: "&6Now is the evening, non-keeping all player's items in &c<world> &6world!"
+    begin_day: "&6Now is the morning, keeping all player's items in &c<world> &6!"
+    begin_night: "&6Now is the evening, non-keeping all player's items in &c<world> &6!"
 
   # title messages to send to anyone in the world
   title:
@@ -120,10 +120,52 @@ keep_items_dayNight:
 
 
 
-# always keep items of players
-keep_items:
+# always keep items of players in a specific world
+keep_items_whitelist:
   enable: true
-  permission: "keepmylife.keepitems"
   # list of world which you want to use this feature
-  world_whitelist:
-  - world_the_end
+  # format:
+  # "<WORLD NAME> <PERMISSION>"
+  worlds:
+  - "world keepmylife.whitelist.world"
+  - "world_nether keepmylife.whitelist.world_nether"
+  - "world_the_end keepmylife.whitelist.world_the_end"
+
+# kept items filter
+# format:
+# <WORLD NAME>:
+#    <unique id, e.g: "1", "2", "3", "4", "5", etc>:
+#       type: <type: NAME, HAS_LORE, MATERIAL, DURABILITY, DATA>
+#       value: <value>
+kept_items_filter:
+  # only checks items in world
+  world:
+    # all items which have the name is "Deathless Item" will be kept
+    "1":
+      type: NAME
+      value: "Deathless Item"
+    # all items which have a lore line is "&a&l[PROTECTED]" will be kept
+    "2":
+      type: HAS_LORE
+      value: "&a&l[PROTECTED]"
+    #"3":
+    #  type: MATERIAL
+    #  value: "DIAMOND"
+    #"4":
+    #  type: DURABILITY
+    #  value: 3
+
+  # only checks items in world_nether
+  world_nether:
+    "1":
+      type: NAME
+      value: "Deathless Item - Nether Edition"
+    "2":
+      type: HAS_LORE
+      value: "&a&l[PROTECTED]"
+    #"3":
+    #  type: MATERIAL
+    #  value: "DIAMOND"
+    #"4":
+    #  type: DATA
+    #  value: 5

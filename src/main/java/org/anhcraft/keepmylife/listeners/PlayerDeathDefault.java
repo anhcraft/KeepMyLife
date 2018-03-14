@@ -22,8 +22,8 @@ public class PlayerDeathDefault implements Listener {
             return;
         }
         Player p = e.getEntity();
-        if(Configuration.config.getBoolean("keep_items.enable")) {
-            if(PlayerDeath.isPlayerInSpecialWorld(p)) {
+        if(Configuration.config.getBoolean("keep_items_whitelist.enable")) {
+            if(PlayerDeath.checkWhitelistedWorld(p)) {
                 if(Configuration.compatible.getBoolean("death_keep_inventory")) {
                     e.setKeepInventory(true);
                 }
@@ -32,15 +32,8 @@ public class PlayerDeathDefault implements Listener {
                     e.setKeepLevel(true);
                 }
 
-                Boolean a = false;
-                if(p.hasPermission(Configuration.config.getString("keep_items.permission"))
-                        || p.isOp()) {
-                    a = true;
-                }
-
-                KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p,
-                        Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList()), a,
-                        KeepReason.Whitelist);
+                KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p, Arrays.stream(p.getInventory()
+                        .getContents()).collect(Collectors.toList()), true, KeepReason.Whitelist);
                 Bukkit.getPluginManager().callEvent(ev);
 
                 if(!ev.isKeep()) {
