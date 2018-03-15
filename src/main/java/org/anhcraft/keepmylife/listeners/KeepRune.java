@@ -1,6 +1,6 @@
 package org.anhcraft.keepmylife.listeners;
 
-import org.anhcraft.keepmylife.KeepReason;
+import org.anhcraft.keepmylife.api.KeepReason;
 import org.anhcraft.keepmylife.api.KeepMyLifeAPI;
 import org.anhcraft.keepmylife.events.KeepPlayerItemByRuneEvent;
 import org.anhcraft.keepmylife.events.KeepPlayerItemEvent;

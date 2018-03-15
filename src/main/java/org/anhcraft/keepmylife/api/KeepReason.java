@@ -1,4 +1,4 @@
-package org.anhcraft.keepmylife;
+package org.anhcraft.keepmylife.api;
 
 public enum KeepReason {
     DayNight,

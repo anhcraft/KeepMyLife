@@ -1,7 +1,7 @@
 package org.anhcraft.keepmylife.listeners;
 
 import net.minefs.DeathDropsAPI.PlayerDeathDropEvent;
-import org.anhcraft.keepmylife.KeepReason;
+import org.anhcraft.keepmylife.api.KeepReason;
 import org.anhcraft.keepmylife.events.KeepPlayerItemEvent;
 import org.anhcraft.keepmylife.utils.Configuration;
 import org.bukkit.Bukkit;

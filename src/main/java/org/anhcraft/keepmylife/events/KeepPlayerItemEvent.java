@@ -1,6 +1,6 @@
 package org.anhcraft.keepmylife.events;
 
-import org.anhcraft.keepmylife.KeepReason;
+import org.anhcraft.keepmylife.api.KeepReason;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
