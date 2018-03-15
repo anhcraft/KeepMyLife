@@ -18,8 +18,8 @@ class RunTitle {
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(KeepMyLife.plugin, new Runnable() {
             @Override
             public void run() {
-                Title.create(RunTitle.title_a, Title.Type.TITLE).send(RunTitle.world_a);
-                Title.create(RunTitle.subtitle_a, Title.Type.SUBTITLE).send(RunTitle.world_a);
+                Title.create(RunTitle.title_a, Title.Type.TITLE, 40, 80, 40).send(RunTitle.world_a);
+                Title.create(RunTitle.subtitle_a, Title.Type.SUBTITLE, 40, 80, 40).send(RunTitle.world_a);
             }
         }, delay);
     }

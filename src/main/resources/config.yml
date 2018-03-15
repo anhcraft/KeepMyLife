@@ -48,7 +48,7 @@ keep_rune:
   - world_nether
 
   # a chat message to send to the player when a keep rune was used
-  message: "&aYour life was saved by keep rune :D"
+  message: "&aYour items were saved by keep rune :D"
 
   # a title message to send to the player when a keep rune was used
   title:
@@ -66,7 +66,7 @@ keep_rune:
     material: EMERALD
     durability: 0
     lores:
-    - "&fA useful rune will keep your life one time!"
+    - "&fAn useful rune will keep your life one time!"
     - "&cJust put this item in your inventory"
     - "&f"
     - "&f-= KeepMylife =-"
@@ -124,17 +124,17 @@ keep_items_dayNight:
     delay: 20 # 1 second
     begin_day:
       title: "&aNow is the morning!"
-      subtitle: "&fKeep all player's items :)"
+      subtitle: "&fKept all player's items :)"
     begin_night:
       title: "&aNow is the evening!"
-      subtitle: "&fNon-keep all player's items :("
+      subtitle: "&fNon-kept all player's items :("
 
   # action bar messages to send to anyone in the world
   actionbar:
     enable: false
     delay: 20 # 1 second
-    begin_day: "&cKeep item!"
-    begin_night: "&cNon-keep item!"
+    begin_day: "&cKept item!"
+    begin_night: "&cNon-kept item!"
 
 
 
@@ -166,7 +166,6 @@ keep_items_whitelist:
 #       value: <value>
 
 keep_items_filter:
-  # only checks items in world
   world:
     # all items which have the name is "Protected Item" will be kept
     "1":
