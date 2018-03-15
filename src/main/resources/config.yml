@@ -1,9 +1,15 @@
 
-# -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-# o0o - KeepMyLife -
-# o0o
-# o0o (c) Anh Craft
-# -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+
+#     ,--. ,--.                     ,--.   ,--.         ,--.   ,--. ,---.
+#     |  .'   / ,---.  ,---.  ,---. |   `.'   |,--. ,--.|  |   `--'/  .-' ,---.
+#     |  .   ' | .-. :| .-. :| .-. ||  |'.'|  | \  '  / |  |   ,--.|  `-,| .-. :
+#     |  |\   \\   --.\   --.| '-' '|  |   |  |  \   '  |  '--.|  ||  .-'\   --.
+#     `--' '--' `----' `----'|  |-' `--'   `--'.-'  /   `-----'`--'`--'   `----'
+#                            `--'              `---'
+
+
+
+# === GENERAL ===
 
 # language (available: en-uk, vi)
 lang: en-uk
@@ -27,11 +33,19 @@ check_daynight_interval: 20 # 1 second
 
 
 
-# keep rune
-# a rune which keeps the life of a player one time!
+
+
+# === KEEP RUNE ===
+# a rune which keeps all items of player one time!
 # after used, the rune will be removed
+
 keep_rune:
-  enable: true
+  enable: false
+
+  # adds the world which you want to use this feature here:
+  worlds:
+  - world
+  - world_nether
 
   # a chat message to send to the player when a keep rune was used
   message: "&aYour life was saved by keep rune :D"
@@ -68,7 +82,11 @@ keep_rune:
 
 
 
+
+
+# === DAY/NIGHT ===
 # keep items of players depends on the time of their world
+
 keep_items_dayNight:
   enable: true
 
@@ -97,8 +115,8 @@ keep_items_dayNight:
 
   # chat messages to broadcast to anyone in the world
   messages:
-    begin_day: "&6Now is the morning, keeping all player's items in &c<world> &6!"
-    begin_night: "&6Now is the evening, non-keeping all player's items in &c<world> &6!"
+    begin_day: "&6Now is the morning, kept items in &c<world> &6!"
+    begin_night: "&6Now is the evening, non-kept items in &c<world> &6!"
 
   # title messages to send to anyone in the world
   title:
@@ -120,9 +138,13 @@ keep_items_dayNight:
 
 
 
-# always keep items of players in a specific world
+
+
+# === WHITELIST ===
+# always keeps in a specific world
+
 keep_items_whitelist:
-  enable: true
+  enable: false
   # list of world which you want to use this feature
   # format:
   # "<WORLD NAME> <PERMISSION>"
@@ -131,41 +153,42 @@ keep_items_whitelist:
   - "world_nether keepmylife.whitelist.world_nether"
   - "world_the_end keepmylife.whitelist.world_the_end"
 
-# kept items filter
+
+
+
+
+# === KEEP ITEMS FILTER ===
+# always keeps specific items
 # format:
 # <WORLD NAME>:
 #    <unique id, e.g: "1", "2", "3", "4", "5", etc>:
-#       type: <type: NAME, HAS_LORE, MATERIAL, DURABILITY, DATA>
+#       type: <type: NAME, HAS_LORE, MATERIAL, MATERIAL_DATA>
 #       value: <value>
-kept_items_filter:
+
+keep_items_filter:
   # only checks items in world
   world:
-    # all items which have the name is "Deathless Item" will be kept
+    # all items which have the name is "Protected Item" will be kept
     "1":
       type: NAME
-      value: "Deathless Item"
+      value: "Protected Item"
     # all items which have a lore line is "&a&l[PROTECTED]" will be kept
     "2":
       type: HAS_LORE
       value: "&a&l[PROTECTED]"
-    #"3":
-    #  type: MATERIAL
-    #  value: "DIAMOND"
-    #"4":
-    #  type: DURABILITY
-    #  value: 3
 
-  # only checks items in world_nether
-  world_nether:
-    "1":
-      type: NAME
-      value: "Deathless Item - Nether Edition"
-    "2":
-      type: HAS_LORE
-      value: "&a&l[PROTECTED]"
-    #"3":
-    #  type: MATERIAL
-    #  value: "DIAMOND"
-    #"4":
-    #  type: DATA
-    #  value: 5
+    # "3":
+    #   type: MATERIAL
+    #   value: DIAMOND
+    # "4":
+    #   type: MATERIAL_DATA
+    #   value: STONE:3
+
+
+  # world_nether:
+  #   "1":
+  #     type: NAME
+  #     value: "&cProtected Item [NETHER]"
+  #   "2":
+  #     type: HAS_LORE
+  #     value: "&a&l[PROTECTED]"

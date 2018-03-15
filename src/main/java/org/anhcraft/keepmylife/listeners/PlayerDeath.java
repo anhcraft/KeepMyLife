@@ -14,8 +14,8 @@ public class PlayerDeath {
     static boolean checkWhitelistedWorld(Player p) {
         Boolean t = false;
         for(String w : Configuration.config.getStringList("keep_items_whitelist.worlds")){
-            if(p.hasPermission(w.split(" ")[0]) &&
-                    p.getWorld().equals(Bukkit.getServer().getWorld(w.split(" ")[1]))){
+            if(p.hasPermission(w.split(" ")[1]) &&
+                    p.getWorld().equals(Bukkit.getServer().getWorld(w.split(" ")[0]))){
                 t = true;
                 break;
             }

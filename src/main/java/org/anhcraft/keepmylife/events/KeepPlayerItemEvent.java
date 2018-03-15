@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public final class KeepPlayerItemEvent extends Event {
+public class KeepPlayerItemEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private List<ItemStack> drops;
     private KeepReason reason;
