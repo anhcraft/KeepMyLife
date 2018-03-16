@@ -20,7 +20,7 @@ import java.util.List;
 public class KeepRune implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onkeep(KeepPlayerItemEvent e){
-        if(e.getReason().equals(KeepReason.DayNight)){
+        if(!e.getReason().equals(KeepReason.WHITELIST)){
             if(!e.isKeep() && Configuration.config.getBoolean("keep_rune.enable")
                     && Configuration.config.getStringList("keep_rune.worlds").contains(e.getPlayer().getWorld().getName())){
                 boolean keep = false;

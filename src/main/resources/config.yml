@@ -164,6 +164,14 @@ keep_items_whitelist:
 #    <unique id, e.g: "1", "2", "3", "4", "5", etc>:
 #       type: <type: NAME, HAS_LORE, MATERIAL, MATERIAL_DATA>
 #       value: <value>
+#
+# WARNING:
+# 1. Firstly, KML doesn't support the id ("magic value") of the material (a number instead of the name) because
+# it deprecated and may be removed in 1.13 (e.g: 277, 5, 30, 1, etc)
+# 2. And you must use a unique id for each config group of item (a group which has two options are "name" and
+# "value").
+# 3. Use "MATERIAL_DATA" type for a group which has the value formats from both a material and a data value
+# (e.g: 277:1, 277:2, etc).
 
 keep_items_filter:
   world:
@@ -171,6 +179,7 @@ keep_items_filter:
     "1":
       type: NAME
       value: "Protected Item"
+
     # all items which have a lore line is "&a&l[PROTECTED]" will be kept
     "2":
       type: HAS_LORE

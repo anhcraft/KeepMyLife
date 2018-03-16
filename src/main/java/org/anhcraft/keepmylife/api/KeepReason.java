@@ -1,6 +1,7 @@
 package org.anhcraft.keepmylife.api;
 
 public enum KeepReason {
-    DayNight,
-    Whitelist
+    DAY_NIGHT,
+    WHITELIST,
+    DEFAULT
 }
