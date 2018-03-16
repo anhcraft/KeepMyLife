@@ -12,7 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerDeathDefault implements Listener {
@@ -37,17 +39,19 @@ public class PlayerDeathDefault implements Listener {
                     e.setKeepLevel(true);
                 }
                 if(!ev.isKeepInventory()) {
-                    for(ItemStack item : ev.getDrops()) {
+                    List<ItemStack> newContents = new ArrayList<>(Arrays.asList(p.getInventory().getContents()));
+                    for(ItemStack item : ev.getDrops()){
                         if(!InventoryUtils.isNull(item)) {
                             if(Configuration.compatible.getBoolean("death_drop_items")) {
                                 p.getWorld().dropItemNaturally(p.getLocation(), item);
                             }
                             if(Configuration.compatible.getBoolean("death_clear_inventory_after_drop")) {
-                                p.getInventory().remove(item);
-                                p.updateInventory();
+                                newContents.remove(item);
                             }
                         }
                     }
+                    p.getInventory().setContents(newContents.toArray(new ItemStack[newContents.size()]));
+                    p.updateInventory();
                 }
                 return;
             }
@@ -69,17 +73,19 @@ public class PlayerDeathDefault implements Listener {
                 e.setKeepLevel(true);
             }
             if(!ev.isKeepInventory()) {
+                List<ItemStack> newContents = new ArrayList<>(Arrays.asList(p.getInventory().getContents()));
                 for(ItemStack item : ev.getDrops()){
                     if(!InventoryUtils.isNull(item)) {
                         if(Configuration.compatible.getBoolean("death_drop_items")) {
                             p.getWorld().dropItemNaturally(p.getLocation(), item);
                         }
                         if(Configuration.compatible.getBoolean("death_clear_inventory_after_drop")) {
-                            p.getInventory().remove(item);
-                            p.updateInventory();
+                            newContents.remove(item);
                         }
                     }
                 }
+                p.getInventory().setContents(newContents.toArray(new ItemStack[newContents.size()]));
+                p.updateInventory();
             }
             return;
         }
@@ -93,17 +99,19 @@ public class PlayerDeathDefault implements Listener {
             e.setKeepLevel(true);
         }
         if(!ev.isKeepInventory()) {
+            List<ItemStack> newContents = new ArrayList<>(Arrays.asList(p.getInventory().getContents()));
             for(ItemStack item : ev.getDrops()){
                 if(!InventoryUtils.isNull(item)) {
                     if(Configuration.compatible.getBoolean("death_drop_items")) {
                         p.getWorld().dropItemNaturally(p.getLocation(), item);
                     }
                     if(Configuration.compatible.getBoolean("death_clear_inventory_after_drop")) {
-                        p.getInventory().remove(item);
-                        p.updateInventory();
+                        newContents.remove(item);
                     }
                 }
             }
+            p.getInventory().setContents(newContents.toArray(new ItemStack[newContents.size()]));
+            p.updateInventory();
         }
     }
 }
