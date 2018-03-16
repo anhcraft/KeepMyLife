@@ -17,6 +17,3 @@ death_clear_inventory_after_drop: true
 # enables this option to allow the plugin disables PlayerDeathEvent (a Bukkit event)
 # it means that this plugin use a custom death drops
 death_keep_inventory: true
-
-# enables this option to keeps the experience of the player
-death_keep_exp: true

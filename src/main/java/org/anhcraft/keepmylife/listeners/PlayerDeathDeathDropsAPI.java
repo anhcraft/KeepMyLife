@@ -20,11 +20,11 @@ public class PlayerDeathDeathDropsAPI implements Listener {
         if(Configuration.config.getBoolean("keep_items_whitelist.enable")) {
             if(PlayerDeath.checkWhitelistedWorld(p)) {
                 KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p,
-                        Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList()), true,
+                        Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList()), true, true,
                         KeepReason.WHITELIST);
                 Bukkit.getPluginManager().callEvent(ev);
 
-                if(!ev.isKeep()) {
+                if(!ev.isKeepInventory()) {
                     if(ev.getDrops().contains(e.getItem())){
                         e.setCancelled(false);
                     } else {
@@ -44,11 +44,11 @@ public class PlayerDeathDeathDropsAPI implements Listener {
             }
             KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p,
                     Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList())
-                    , b,
+                    , b, true,
                     KeepReason.DAY_NIGHT);
             Bukkit.getPluginManager().callEvent(ev);
 
-            if(!ev.isKeep()) {
+            if(!ev.isKeepInventory()) {
                 if(ev.getDrops().contains(e.getItem())){
                     e.setCancelled(false);
                 } else {
@@ -59,9 +59,9 @@ public class PlayerDeathDeathDropsAPI implements Listener {
 
         // DEFAULT
         KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p, Arrays.stream(p.getInventory()
-                .getContents()).collect(Collectors.toList()), false, KeepReason.DEFAULT);
+                .getContents()).collect(Collectors.toList()), false, true, KeepReason.DEFAULT);
         Bukkit.getPluginManager().callEvent(ev);
-        if(!ev.isKeep()) {
+        if(!ev.isKeepInventory()) {
             if(ev.getDrops().contains(e.getItem())){
                 e.setCancelled(false);
             } else {

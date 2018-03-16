@@ -24,19 +24,19 @@ public class PlayerDeathDefault implements Listener {
         if(Configuration.compatible.getBoolean("death_keep_inventory")) {
             e.setKeepInventory(true);
         }
-        if(Configuration.compatible.getBoolean("death_keep_exp")) {
-            e.setDroppedExp(0);
-            e.setKeepLevel(true);
-        }
         Player p = e.getEntity();
         // WHTIELIST
         if(Configuration.config.getBoolean("keep_items_whitelist.enable")) {
             if(PlayerDeath.checkWhitelistedWorld(p)) {
                 KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p, Arrays.stream(p.getInventory()
-                        .getContents()).collect(Collectors.toList()), true, KeepReason.WHITELIST);
+                        .getContents()).collect(Collectors.toList()), true, true, KeepReason.WHITELIST);
                 Bukkit.getPluginManager().callEvent(ev);
 
-                if(!ev.isKeep()) {
+                if(ev.isKeepExp()) {
+                    e.setDroppedExp(0);
+                    e.setKeepLevel(true);
+                }
+                if(!ev.isKeepInventory()) {
                     for(ItemStack item : ev.getDrops()) {
                         if(!InventoryUtils.isNull(item)) {
                             if(Configuration.compatible.getBoolean("death_drop_items")) {
@@ -60,11 +60,15 @@ public class PlayerDeathDefault implements Listener {
                 a = true;
             }
             KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p,
-                    Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList()), a,
+                    Arrays.stream(p.getInventory().getContents()).collect(Collectors.toList()), a, true,
                     KeepReason.DAY_NIGHT);
             Bukkit.getPluginManager().callEvent(ev);
 
-            if(!ev.isKeep()) {
+            if(ev.isKeepExp()) {
+                e.setDroppedExp(0);
+                e.setKeepLevel(true);
+            }
+            if(!ev.isKeepInventory()) {
                 for(ItemStack item : ev.getDrops()){
                     if(!InventoryUtils.isNull(item)) {
                         if(Configuration.compatible.getBoolean("death_drop_items")) {
@@ -82,9 +86,13 @@ public class PlayerDeathDefault implements Listener {
 
         // DEFAULT
         KeepPlayerItemEvent ev = new KeepPlayerItemEvent(p, Arrays.stream(p.getInventory()
-                .getContents()).collect(Collectors.toList()), false, KeepReason.DEFAULT);
+                .getContents()).collect(Collectors.toList()), false, true, KeepReason.DEFAULT);
         Bukkit.getPluginManager().callEvent(ev);
-        if(!ev.isKeep()) {
+        if(ev.isKeepExp()) {
+            e.setDroppedExp(0);
+            e.setKeepLevel(true);
+        }
+        if(!ev.isKeepInventory()) {
             for(ItemStack item : ev.getDrops()){
                 if(!InventoryUtils.isNull(item)) {
                     if(Configuration.compatible.getBoolean("death_drop_items")) {

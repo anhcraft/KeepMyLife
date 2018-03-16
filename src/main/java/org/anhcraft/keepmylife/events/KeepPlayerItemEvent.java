@@ -13,23 +13,34 @@ public class KeepPlayerItemEvent extends Event {
     private List<ItemStack> drops;
     private KeepReason reason;
     private Player p;
-    private boolean keep;
+    private boolean keepInventory;
+    private boolean keepExp;
 
-    public KeepPlayerItemEvent(Player player, List<ItemStack> drops, Boolean keep, KeepReason reason) {
+    public KeepPlayerItemEvent(Player player, List<ItemStack> drops, Boolean keepInventory,
+                               Boolean keepExp, KeepReason reason) {
         this.p = player;
-        this.keep = keep;
+        this.keepInventory = keepInventory;
+        this.keepExp = keepExp;
         this.drops = drops;
         this.reason = reason;
     }
 
     public Player getPlayer(){return this.p;}
 
-    public void keep(Boolean keep){
-        this.keep = keep;
+    public void setKeepExp(Boolean keepExp){
+        this.keepExp = keepExp;
     }
 
-    public Boolean isKeep(){
-        return this.keep;
+    public Boolean isKeepExp(){
+        return this.keepExp;
+    }
+
+    public void setKeepInventory(Boolean keepInventory){
+        this.keepInventory = keepInventory;
+    }
+
+    public Boolean isKeepInventory(){
+        return this.keepInventory;
     }
 
     public KeepReason getReason(){

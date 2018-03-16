@@ -21,7 +21,7 @@ public class KeepRune implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onkeep(KeepPlayerItemEvent e){
         if(!e.getReason().equals(KeepReason.WHITELIST)){
-            if(!e.isKeep() && Configuration.config.getBoolean("keep_rune.enable")
+            if(!e.isKeepInventory() && Configuration.config.getBoolean("keep_rune.enable")
                     && Configuration.config.getStringList("keep_rune.worlds").contains(e.getPlayer().getWorld().getName())){
                 boolean keep = false;
 
@@ -55,7 +55,7 @@ public class KeepRune implements Listener {
                 }
 
                 if(keep){
-                    e.keep(true);
+                    e.setKeepInventory(true);
                     e.setDrops(new ArrayList<>());
                     e.getPlayer().getInventory().setContents(newInv.toArray(new ItemStack[newInv.size()]));
                     e.getPlayer().updateInventory();
