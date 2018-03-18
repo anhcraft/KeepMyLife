@@ -3,7 +3,7 @@ package org.anhcraft.keepmylife.listeners;
 import org.anhcraft.keepmylife.events.KeepPlayerItemEvent;
 import org.anhcraft.keepmylife.events.KeepPlayerItemFilterEvent;
 import org.anhcraft.keepmylife.utils.Configuration;
-import org.anhcraft.spaciouslib.inventory.SItems;
+import org.anhcraft.spaciouslib.inventory.SItem;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
 import org.anhcraft.spaciouslib.utils.StringUtils;
 import org.anhcraft.spaciouslib.utils.Strings;
@@ -32,7 +32,7 @@ public class KeepItemFilter implements Listener{
                         if(InventoryUtils.isNull(i)) {
                             continue;
                         }
-                        SItems item = new SItems(i);
+                        SItem item = new SItem(i);
                         if(type.equals("NAME")) {
                             if(item.name() != null) {
                                 if(item.name().equals(Strings.color(x.getString("value")))) {
@@ -58,8 +58,7 @@ public class KeepItemFilter implements Listener{
                         if(type.equals("MATERIAL_DATA")) {
                             String[] n = x.getString("value").split(":");
                             if(item.getType().toString().equals(n[0].toUpperCase())
-                                    && i.getData().getData() == Byte
-                                    .parseByte(StringUtils.toStrNumber(n[1]))) {
+                                    && i.getData().getData() == ((byte) StringUtils.toIntegerNumber(n[1]))) {
                                 keepItems.add(i);
                             }
                         }
