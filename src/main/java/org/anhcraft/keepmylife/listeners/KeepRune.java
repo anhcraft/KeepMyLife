@@ -1,10 +1,10 @@
 package org.anhcraft.keepmylife.listeners;
 
+import org.anhcraft.keepmylife.KeepMyLife;
 import org.anhcraft.keepmylife.api.KeepMyLifeAPI;
 import org.anhcraft.keepmylife.events.KeepPlayerItemByRuneEvent;
 import org.anhcraft.keepmylife.events.KeepPlayerItemEvent;
 import org.anhcraft.keepmylife.utils.Configuration;
-import org.anhcraft.keepmylife.utils.Strings;
 import org.anhcraft.spaciouslib.protocol.ActionBar;
 import org.anhcraft.spaciouslib.protocol.Title;
 import org.bukkit.Bukkit;
@@ -34,7 +34,7 @@ public class KeepRune implements Listener {
                     }
 
                     keep = true;
-                    Strings.sendPlayer(Configuration.config.getString("keep_rune.message"), e.getPlayer());
+                    KeepMyLife.chat.sendPlayer(Configuration.config.getString("keep_rune.message"), e.getPlayer());
                     if(Configuration.config.getBoolean("keep_rune.actionbar.enable")){
                         ActionBar.create(Configuration.config.getString("keep_rune.actionbar.message")).sendPlayer(e.getPlayer());
                     }

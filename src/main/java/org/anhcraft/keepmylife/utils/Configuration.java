@@ -8,7 +8,7 @@ import java.io.File;
 public class Configuration {
     public static FileConfiguration config;
     public static FileConfiguration compatible;
-    static FileConfiguration message;
+    public static FileConfiguration message;
 
     private static void loadConfigFile() {
         File d = new File("plugins/KeepMyLife/config.yml");

@@ -3,8 +3,8 @@ package org.anhcraft.keepmylife.tasks;
 import org.anhcraft.keepmylife.KeepMyLife;
 import org.anhcraft.keepmylife.listeners.PlayerDeath;
 import org.anhcraft.keepmylife.utils.Configuration;
-import org.anhcraft.keepmylife.utils.Strings;
 import org.anhcraft.spaciouslib.utils.GameVersion;
+import org.anhcraft.spaciouslib.utils.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -43,10 +43,10 @@ public class TimeKeepItems {
                             if((isNight.get(w)) && (time < Configuration.config
                                     .getLong("time_begin_night"))) {
                                 isNight.put(w, false);
-                                Strings.sendGlobal(Configuration.config
+                                KeepMyLife.chat.sendGlobal(Configuration.config
                                         .getString("keep_items_dayNight.messages.begin_day")
                                         .replace("<world>", w.getName()), w);
-                                Strings.sendSender(Configuration.config
+                                KeepMyLife.chat.sendSender(Configuration.config
                                         .getString("keep_items_dayNight.messages.begin_day")
                                         .replace("<world>", w.getName()));
                                 if(Configuration.config
@@ -94,10 +94,10 @@ public class TimeKeepItems {
                             if((!isNight.get(w)) && (time >= Configuration.config
                                     .getLong("time_begin_night"))) {
                                 isNight.put(w, true);
-                                Strings.sendGlobal(Configuration.config
+                                KeepMyLife.chat.sendGlobal(Configuration.config
                                         .getString("keep_items_dayNight.messages.begin_night")
                                         .replace("<world>", w.getName()), w);
-                                Strings.sendSender(Configuration.config
+                                KeepMyLife.chat.sendSender(Configuration.config
                                         .getString("keep_items_dayNight.messages.begin_night")
                                         .replace("<world>", w.getName()));
                                 if(Configuration.config

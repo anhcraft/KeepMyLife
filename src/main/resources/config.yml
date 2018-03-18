@@ -41,6 +41,7 @@ check_daynight_interval: 20 # 1 second
 
 keep_rune:
   enable: false
+  recipe: true
 
   # adds the world which you want to use this feature here:
   worlds:
