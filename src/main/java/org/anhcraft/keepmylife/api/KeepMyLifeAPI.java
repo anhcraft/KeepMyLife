@@ -9,11 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 
 public class KeepMyLifeAPI {
-    private static ShapedRecipe keep_rune_recipe;
-
     public static ItemStack getKeepRune(){
         SItem s = new SItem(
                 Configuration.config.getString("keep_rune.item.name"),
@@ -38,13 +35,5 @@ public class KeepMyLifeAPI {
 
     public static boolean isKeepRune(ItemStack item){
         return !InventoryUtils.isNull(item) && new NBTManager(item).hasKey(Configuration.config.getString("keep_rune.item.nbt_tag"));
-    }
-
-    public static ShapedRecipe getKeepRuneRecipe(){
-        return keep_rune_recipe;
-    }
-
-    public static void setKeepRuneRecipe(ShapedRecipe r){
-        keep_rune_recipe = r;
     }
 }
