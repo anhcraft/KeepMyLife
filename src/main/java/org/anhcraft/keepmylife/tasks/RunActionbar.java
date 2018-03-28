@@ -16,7 +16,7 @@ class RunActionbar {
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(KeepMyLife.plugin, new Runnable() {
             @Override
             public void run() {
-                ActionBar.create(mess_a, 40, 80, 40).send(world_a);
+                ActionBar.create(mess_a, 40, 80, 40).sendWorld(world_a);
             }
         }, delay);
     }

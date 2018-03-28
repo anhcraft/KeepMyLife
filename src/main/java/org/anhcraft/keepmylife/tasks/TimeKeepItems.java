@@ -4,7 +4,6 @@ import org.anhcraft.keepmylife.KeepMyLife;
 import org.anhcraft.keepmylife.listeners.PlayerDeath;
 import org.anhcraft.keepmylife.utils.Configuration;
 import org.anhcraft.spaciouslib.utils.GameVersion;
-import org.anhcraft.spaciouslib.utils.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World;

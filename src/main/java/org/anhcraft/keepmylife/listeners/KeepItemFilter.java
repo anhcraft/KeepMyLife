@@ -3,10 +3,10 @@ package org.anhcraft.keepmylife.listeners;
 import org.anhcraft.keepmylife.events.KeepPlayerItemEvent;
 import org.anhcraft.keepmylife.events.KeepPlayerItemFilterEvent;
 import org.anhcraft.keepmylife.utils.Configuration;
-import org.anhcraft.spaciouslib.inventory.SItem;
+import org.anhcraft.spaciouslib.inventory.ItemManager;
+import org.anhcraft.spaciouslib.utils.Chat;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
 import org.anhcraft.spaciouslib.utils.StringUtils;
-import org.anhcraft.spaciouslib.utils.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -32,18 +32,18 @@ public class KeepItemFilter implements Listener{
                         if(InventoryUtils.isNull(i)) {
                             continue;
                         }
-                        SItem item = new SItem(i);
+                        ItemManager item = new ItemManager(i);
                         if(type.equals("NAME")) {
-                            if(item.name() != null) {
-                                if(item.name().equals(Strings.color(x.getString("value")))) {
+                            if(item.getName() != null) {
+                                if(item.getName().equals(Chat.color(x.getString("value")))) {
                                     keepItems.add(i);
                                 }
                             }
                         }
                         if(type.equals("HAS_LORE")) {
-                            if(item.lore() != null) {
-                                for(String l : item.lore()) {
-                                    if(l.equals(Strings.color(x.getString("value")))) {
+                            if(item.getLores() != null) {
+                                for(String l : item.getLores()) {
+                                    if(l.equals(Chat.color(x.getString("value")))) {
                                         keepItems.add(i);
                                         break;
                                     }
