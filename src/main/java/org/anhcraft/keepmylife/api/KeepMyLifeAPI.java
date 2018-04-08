@@ -3,8 +3,8 @@ package org.anhcraft.keepmylife.api;
 import org.anhcraft.keepmylife.utils.Configuration;
 import org.anhcraft.spaciouslib.inventory.ItemManager;
 import org.anhcraft.spaciouslib.nbt.NBTManager;
+import org.anhcraft.spaciouslib.utils.CommonUtils;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
-import org.anhcraft.spaciouslib.utils.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -34,7 +34,7 @@ public class KeepMyLifeAPI {
         for(String n : Configuration.config.getStringList("keep_rune.item.enchants")){
             String[] t = n.split(":");
             s.addEnchant(Enchantment.getByName(t[0].toUpperCase()),
-                    StringUtils.toIntegerNumber(t[1]));
+                    CommonUtils.toIntegerNumber(t[1]));
         }
         return NBTManager.fromItem(s.getItem()).setBoolean(Configuration.config.getString("keep_rune.item.nbt_tag"), true).toItem(s.getItem());
     }

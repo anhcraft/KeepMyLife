@@ -5,8 +5,8 @@ import org.anhcraft.keepmylife.events.KeepPlayerItemFilterEvent;
 import org.anhcraft.keepmylife.utils.Configuration;
 import org.anhcraft.spaciouslib.inventory.ItemManager;
 import org.anhcraft.spaciouslib.utils.Chat;
+import org.anhcraft.spaciouslib.utils.CommonUtils;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
-import org.anhcraft.spaciouslib.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -58,7 +58,7 @@ public class KeepItemFilter implements Listener{
                         if(type.equals("MATERIAL_DATA")) {
                             String[] n = x.getString("value").split(":");
                             if(item.getType().toString().equals(n[0].toUpperCase())
-                                    && i.getData().getData() == ((byte) StringUtils.toIntegerNumber(n[1]))) {
+                                    && i.getData().getData() == ((byte) CommonUtils.toIntegerNumber(n[1]))) {
                                 keepItems.add(i);
                             }
                         }
