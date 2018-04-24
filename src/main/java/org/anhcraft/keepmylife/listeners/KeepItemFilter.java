@@ -36,7 +36,9 @@ public class KeepItemFilter implements Listener{
                         if(type.equals("NAME")) {
                             if(item.getName() != null) {
                                 if(item.getName().equals(Chat.color(x.getString("value")))) {
-                                    keepItems.add(i);
+                                    if(Math.random() <= x.getDouble("chance", 1)){
+                                        keepItems.add(i);
+                                    }
                                 }
                             }
                         }
@@ -44,7 +46,9 @@ public class KeepItemFilter implements Listener{
                             if(item.getLores() != null) {
                                 for(String l : item.getLores()) {
                                     if(l.equals(Chat.color(x.getString("value")))) {
-                                        keepItems.add(i);
+                                        if(Math.random() <= x.getDouble("chance", 1)){
+                                            keepItems.add(i);
+                                        }
                                         break;
                                     }
                                 }
@@ -52,14 +56,18 @@ public class KeepItemFilter implements Listener{
                         }
                         if(type.equals("MATERIAL")) {
                             if(item.getType().toString().equals(x.getString("value").toUpperCase())) {
-                                keepItems.add(i);
+                                if(Math.random() <= x.getDouble("chance", 1)){
+                                    keepItems.add(i);
+                                }
                             }
                         }
                         if(type.equals("MATERIAL_DATA")) {
                             String[] n = x.getString("value").split(":");
                             if(item.getType().toString().equals(n[0].toUpperCase())
                                     && i.getData().getData() == ((byte) CommonUtils.toIntegerNumber(n[1]))) {
-                                keepItems.add(i);
+                                if(Math.random() <= x.getDouble("chance", 1)){
+                                    keepItems.add(i);
+                                }
                             }
                         }
                     }

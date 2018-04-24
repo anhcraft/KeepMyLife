@@ -165,6 +165,7 @@ keep_items_whitelist:
 #    <unique id, e.g: "1", "2", "3", "4", "5", etc>:
 #       type: <type: NAME, HAS_LORE, MATERIAL, MATERIAL_DATA>
 #       value: <value>
+#       chance: 1 (optional, must be a number from 0 to 1)
 #
 # WARNING:
 # 1. Firstly, KML doesn't support the id ("magic value") of the material (a number instead of the name) because
@@ -175,16 +176,17 @@ keep_items_whitelist:
 # (e.g: 277:1, 277:2, etc).
 
 keep_items_filter:
-  world:
+  # world:
     # all items which have the name is "Protected Item" will be kept
-    "1":
-      type: NAME
-      value: "Protected Item"
+    # "1":
+    #   type: NAME
+    #   value: "Protected Item"
 
-    # all items which have a lore line is "&a&l[PROTECTED]" will be kept
-    "2":
-      type: HAS_LORE
-      value: "&a&l[PROTECTED]"
+    # all items which have a lore line is "&a&l[PROTECTED]" will have a chance of 50% (0.5) to be kept
+    # "2":
+    #   type: HAS_LORE
+    #   value: "&a&l[PROTECTED]"
+    #   chance: 0.5
 
     # "3":
     #   type: MATERIAL
@@ -192,7 +194,6 @@ keep_items_filter:
     # "4":
     #   type: MATERIAL_DATA
     #   value: STONE:3
-
 
   # world_nether:
   #   "1":

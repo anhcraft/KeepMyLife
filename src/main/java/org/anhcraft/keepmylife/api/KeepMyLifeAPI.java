@@ -2,7 +2,7 @@ package org.anhcraft.keepmylife.api;
 
 import org.anhcraft.keepmylife.utils.Configuration;
 import org.anhcraft.spaciouslib.inventory.ItemManager;
-import org.anhcraft.spaciouslib.nbt.NBTManager;
+import org.anhcraft.spaciouslib.nbt.NBTLoader;
 import org.anhcraft.spaciouslib.utils.CommonUtils;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
 import org.bukkit.Material;
@@ -36,10 +36,10 @@ public class KeepMyLifeAPI {
             s.addEnchant(Enchantment.getByName(t[0].toUpperCase()),
                     CommonUtils.toIntegerNumber(t[1]));
         }
-        return NBTManager.fromItem(s.getItem()).setBoolean(Configuration.config.getString("keep_rune.item.nbt_tag"), true).toItem(s.getItem());
+        return NBTLoader.fromItem(s.getItem()).setBoolean(Configuration.config.getString("keep_rune.item.nbt_tag"), true).toItem(s.getItem());
     }
 
     public static boolean isKeepRune(ItemStack item){
-        return !InventoryUtils.isNull(item) && NBTManager.fromItem(item).hasKey(Configuration.config.getString("keep_rune.item.nbt_tag"));
+        return !InventoryUtils.isNull(item) && NBTLoader.fromItem(item).hasKey(Configuration.config.getString("keep_rune.item.nbt_tag"));
     }
 }

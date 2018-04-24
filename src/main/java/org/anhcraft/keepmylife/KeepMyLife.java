@@ -121,10 +121,10 @@ public final class KeepMyLife extends JavaPlugin {
     }
 
     private void init() {
-        RecipeManager.unregister(KeepMyLifeAPI.getKeepRuneRecipe());
+        new RecipeManager(KeepMyLifeAPI.getKeepRuneRecipe()).unregister();
         if(Configuration.config.getBoolean("keep_rune.enable")
                 && Configuration.config.getBoolean("keep_rune.recipe", false)){
-            RecipeManager.register(KeepMyLifeAPI.getKeepRuneRecipe());
+            new RecipeManager(KeepMyLifeAPI.getKeepRuneRecipe()).register();
         }
     }
 
