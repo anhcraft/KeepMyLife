@@ -21,7 +21,14 @@ public class KeepItemFilter implements Listener{
     public void item(KeepPlayerItemEvent event) {
         List<ItemStack> dropItems = event.getDrops();
         List<ItemStack> keepItems = new ArrayList<>();
-        for(String w : Configuration.config.getConfigurationSection("keep_items_filter").getKeys(false)) {
+        ConfigurationSection cs = Configuration.config.getConfigurationSection("keep_items_filter");
+        if(cs == null){
+           return;
+        }
+        if(cs.getKeys(false) == null){
+            return;
+        }
+        for(String w : cs.getKeys(false)) {
             if(w.equals(event.getPlayer().getWorld().getName())) {
                 ConfigurationSection s = Configuration.config
                         .getConfigurationSection("keep_items_filter." + w);
