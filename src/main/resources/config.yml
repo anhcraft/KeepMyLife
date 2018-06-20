@@ -11,37 +11,30 @@
 
 # === GENERAL ===
 
-# language (available: en-uk, vi)
-lang: en-uk
-
-# plugin's message prefix
-prefix: "&b[KML] "
-
-# time ended the morning and start the evening (WARNING: no afternoon)
-# WARNING: this plugin uses Minecraft ticks
-#
-# 1000: Time when using the /time set day command.
-# 6000: Noon; the sun is at its zenith.
-# 13000: Time when using the /time set night command.
-# 18000: Midnight; the moon is at its zenith.
-#
-# http://minecraft.gamepedia.com/Day-night_cycle
-time_begin_night: 13000
-
-# an interval time between checks
-check_daynight_interval: 20 # 1 second
-
-
-
+general:
+  # plugin's message prefix
+  prefix: "&b[KML] "
+  # should notify the players when a new version available?
+  notify_update: true
 
 
 # === KEEP RUNE ===
 # a rune which keeps all items of player one time!
 # after used, the rune will be removed
+# If your server uses DeathDropsAPI, the messages of keep rune feature won't work
 
 keep_rune:
-  enable: false
-  recipe: true
+  recipe:
+    # can players craft runes?
+    enable: true
+    shape:
+    - "ABA"
+    - "BCB"
+    - "ABA"
+    materials:
+    - "A 388:0"
+    - "B 377:0"
+    - "C 399:0"
 
   # adds the world which you want to use this feature here:
   worlds:
@@ -49,7 +42,9 @@ keep_rune:
   - world_nether
 
   # a chat message to send to the player when a keep rune was used
-  message: "&aYour items were saved by keep rune :D"
+  chat:
+    enable: true
+    message: "&aYour items were saved by keep rune :D"
 
   # a title message to send to the player when a keep rune was used
   title:
@@ -88,54 +83,57 @@ keep_rune:
 # === DAY/NIGHT ===
 # keep items of players depends on the time of their world
 
-keep_items_dayNight:
-  enable: true
+keep_items_daynight:
+  # if you want to keep at night, change this to "night"
+  keep_time: day
 
-  keep_day: true # enable keep in day
-  keep_night: false # enable keep at night
+  # time ended the morning and start the evening
+  # WARNING: this plugin uses Minecraft ticks
+  #
+  # 1000: Time when using the /time set day command.
+  # 6000: Noon; the sun is at its zenith.
+  # 13000: Time when using the /time set night command.
+  # 18000: Midnight; the moon is at its zenith.
+  #
+  # http://minecraft.gamepedia.com/Day-night_cycle
+  time_begin_night: 13000
 
   # sound
   sound:
-    day:
-      enable: true
-      # the sound after 1.8 changed so there are two options:
-      v1_8: "FIREWORK_TWINKLE"
-      other: "ENTITY_FIREWORK_TWINKLE"
-    night:
-      enable: true
-      # the sound after 1.8 changed so there are two options:
-      v1_8: "ENDERDRAGON_GROWL"
-      other: "ENTITY_ENDERDRAGON_AMBIENT"
+    enable: true
+    # 1.8 sound: FIREWORK_TWINKLE
+    keep: "ENTITY_FIREWORK_TWINKLE"
+    # 1.8 sound: ENDERDRAGON_GROWL
+    nonkeep: "ENTITY_ENDERDRAGON_AMBIENT"
 
   # list of world which you want to use this feature
   worlds:
-    - "world"
-    # - "example"
-    # - "server"
-    # - "survival"
+  - "world"
+  # - "example"
+  # - "server"
+  # - "survival"
 
   # chat messages to broadcast to anyone in the world
   messages:
-    begin_day: "&6Now is the morning, kept items in &c<world> &6!"
-    begin_night: "&6Now is the evening, non-kept items in &c<world> &6!"
+    enable: true
+    keep: "&6Now is the morning, kept items in &c<world> &6!"
+    nonkeep: "&6Now is the evening, non-kept items in &c<world> &6!"
 
   # title messages to send to anyone in the world
   title:
     enable: true
-    delay: 20 # 1 second
-    begin_day:
+    keep:
       title: "&aNow is the morning!"
       subtitle: "&fKept all player's items :)"
-    begin_night:
+    nonkeep:
       title: "&aNow is the evening!"
       subtitle: "&fNon-kept all player's items :("
 
   # action bar messages to send to anyone in the world
   actionbar:
     enable: false
-    delay: 20 # 1 second
-    begin_day: "&cKept item!"
-    begin_night: "&cNon-kept item!"
+    keep: "&cKept item!"
+    nonkeep: "&cNon-kept item!"
 
 
 
@@ -145,14 +143,9 @@ keep_items_dayNight:
 # always keeps in a specific world
 
 keep_items_whitelist:
-  enable: false
-  # list of world which you want to use this feature
-  # format:
-  # "<WORLD NAME> <PERMISSION>"
-  worlds:
-  - "world keepmylife.whitelist.world"
-  - "world_nether keepmylife.whitelist.world_nether"
-  - "world_the_end keepmylife.whitelist.world_the_end"
+- "protected_world"
+#- "world_nether"
+#- "world_the_end"
 
 
 
@@ -160,45 +153,22 @@ keep_items_whitelist:
 
 # === KEEP ITEMS FILTER ===
 # always keeps specific items
-# format:
-# <WORLD NAME>:
-#    <unique id, e.g: "1", "2", "3", "4", "5", etc>:
-#       type: <type: NAME, HAS_LORE, MATERIAL, MATERIAL_DATA>
-#       value: <value>
-#       chance: 1 (optional, must be a number from 0 to 1)
-#
-# WARNING:
-# 1. Firstly, KML doesn't support the id ("magic value") of the material (a number instead of the name) because
-# it deprecated and may be removed in 1.13 (e.g: 277, 5, 30, 1, etc)
-# 2. And you must use a unique id for each config group of item (a group which has two options are "name" and
-# "value").
-# 3. Use "MATERIAL_DATA" type for a group which has the value formats from both a material and a data value
-# (e.g: 277:1, 277:2, etc).
 
 keep_items_filter:
-  # world:
-    # all items which have the name is "Protected Item" will be kept
-    # "1":
-    #   type: NAME
-    #   value: "Protected Item"
-
-    # all items which have a lore line is "&a&l[PROTECTED]" will have a chance of 50% (0.5) to be kept
-    # "2":
-    #   type: HAS_LORE
-    #   value: "&a&l[PROTECTED]"
-    #   chance: 0.5
-
-    # "3":
-    #   type: MATERIAL
-    #   value: DIAMOND
-    # "4":
-    #   type: MATERIAL_DATA
-    #   value: STONE:3
-
-  # world_nether:
-  #   "1":
-  #     type: NAME
-  #     value: "&cProtected Item [NETHER]"
-  #   "2":
-  #     type: HAS_LORE
-  #     value: "&a&l[PROTECTED]"
+  world:
+    '0':
+      material: EMERALD
+      durability: 0
+    '1':
+      material: DIAMOND
+      durability: 0
+      name: '&a&lProtected Item'
+    '2':
+      material: DIAMOND
+      durability: 0
+      contains_lore: '&c&l[Protected]'
+    '3':
+      material: DIAMOND
+      durability: 0
+      # this chance must from 0 to 1, ex: 0.2 means 20% of chance this item won't keep even it passes all requirements
+      fail_chance: 0.2

@@ -1,4 +1,4 @@
-package org.anhcraft.keepmylife.utils;
+package org.anhcraft.keepmylife;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,7 +32,7 @@ public class Updater1501986116 implements Listener {
 
     @EventHandler
     public void join(PlayerJoinEvent e){
-        if(Math.random() < 0.5 && !newestVersion){
+        if(KeepMyLife.instance.getConfig().getBoolean("general.notify_update") && Math.random() < 0.5 && !newestVersion){
             e.getPlayer().sendMessage(ChatColor.RED+plugin.getName()+" is having a newer version, please update <3");
         }
     }
