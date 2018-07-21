@@ -32,9 +32,9 @@ keep_rune:
     - "BCB"
     - "ABA"
     materials:
-    - "A 388:0"
-    - "B 377:0"
-    - "C 399:0"
+    - "A emerald"
+    - "B blaze_powder"
+    - "C nether_star"
 
   # adds the world which you want to use this feature here:
   worlds:
@@ -100,10 +100,12 @@ keep_items_daynight:
 
   # sound
   sound:
-    enable: true
-    # 1.8 sound: FIREWORK_TWINKLE
+    enable: false
+    # 1.8: FIREWORK_TWINKLE
+    # 1.13: ENTITY_FIREWORK_ROCKET_TWINKLE
     keep: "ENTITY_FIREWORK_TWINKLE"
-    # 1.8 sound: ENDERDRAGON_GROWL
+    # 1.8: ENDERDRAGON_GROWL
+    # 1.13: ENTITY_ENDER_DRAGON_AMBIENT
     nonkeep: "ENTITY_ENDERDRAGON_AMBIENT"
 
   # list of world which you want to use this feature

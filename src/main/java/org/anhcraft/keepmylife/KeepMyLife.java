@@ -16,9 +16,11 @@ import org.anhcraft.spaciouslib.protocol.ActionBar;
 import org.anhcraft.spaciouslib.protocol.Title;
 import org.anhcraft.spaciouslib.utils.Chat;
 import org.anhcraft.spaciouslib.utils.CommonUtils;
+import org.anhcraft.spaciouslib.utils.GameVersion;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
 import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -30,7 +32,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class KeepMyLife extends JavaPlugin {
     public static KeepMyLife instance;
     public static Chat chat;
     private static Set<String> keepingWorlds = new HashSet<>();
+    private static boolean registeredRecipe = false;
 
     @Override
     public void onEnable() {
@@ -142,7 +144,10 @@ public class KeepMyLife extends JavaPlugin {
 
     private void init() {
         keepingWorlds.clear();
-        new RecipeManager(getKeepRuneRecipe()).unregister();
+        if(registeredRecipe) {
+            new RecipeManager(getKeepRuneRecipe()).unregister();
+            registeredRecipe = false;
+        }
         File f = new File("plugins/KeepMylife/");
         new DirectoryManager(f).mkdirs();
         try {
@@ -155,6 +160,7 @@ public class KeepMyLife extends JavaPlugin {
         chat = new Chat(getConfig().getString("general.prefix"));
         if(getConfig().getBoolean("keep_rune.recipe.enable")){
             new RecipeManager(getKeepRuneRecipe()).register();
+            registeredRecipe = true;
         }
         keepingWorlds.addAll(getConfig().getStringList("keep_items_whitelist"));
     }
@@ -209,7 +215,7 @@ public class KeepMyLife extends JavaPlugin {
 
     public static void dayNight(String tm, World w) {
         if(instance.getConfig().getBoolean("keep_items_daynight.messages.enable")){
-            chat.sendGlobal(instance.getConfig().getString("keep_items_daynight.messages."+tm).replace("<world>", w.getName()));
+            chat.sendGlobal(instance.getConfig().getString("keep_items_daynight.messages."+tm).replace("<world>", w.getName()), w);
         }
         if(instance.getConfig().getBoolean("keep_items_daynight.title.enable")){
             Title.create(instance.getConfig().getString("keep_items_daynight.title."
@@ -222,14 +228,9 @@ public class KeepMyLife extends JavaPlugin {
                     +tm).replace("<world>", w.getName())).sendWorld(w);
         }
         if(instance.getConfig().getBoolean("keep_items_daynight.sound.enable")){
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    for(Player p : w.getPlayers()){
-                        w.playSound(p.getLocation(), Sound.valueOf(instance.getConfig().getString("keep_items_daynight.sound." +tm).toUpperCase()), 2.0F, 0.5F);
-                    }
-                }
-            }.runTaskLater(instance, 0);
+            for(Player p : w.getPlayers()){
+                w.playSound(p.getLocation(), Sound.valueOf(instance.getConfig().getString("keep_items_daynight.sound." +tm).toUpperCase()), 1.0F, 0.5F);
+            }
         }
     }
 
@@ -239,9 +240,16 @@ public class KeepMyLife extends JavaPlugin {
     }
 
     public static Recipe getKeepRuneRecipe(){
-        ShapedRecipe r = new ShapedRecipe(getKeepRune())
-                .shape(CommonUtils.toArray(instance.getConfig()
-                        .getStringList("keep_rune.recipe.shape"), String.class));
+        ShapedRecipe r;
+        if(GameVersion.is1_13Above()) {
+            r = new ShapedRecipe(new NamespacedKey(KeepMyLife.instance,"recipe"), getKeepRune())
+                    .shape(CommonUtils.toArray(instance.getConfig()
+                            .getStringList("keep_rune.recipe.shape"), String.class));
+        } else {
+            r = new ShapedRecipe(getKeepRune())
+                    .shape(CommonUtils.toArray(instance.getConfig()
+                            .getStringList("keep_rune.recipe.shape"), String.class));
+        }
         List<String> a = instance.getConfig()
                 .getStringList("keep_rune.recipe.materials");
         for(String x : a){
@@ -270,7 +278,7 @@ public class KeepMyLife extends JavaPlugin {
             s.addEnchant(Enchantment.getByName(t[0].toUpperCase()),
                     CommonUtils.toIntegerNumber(t[1]));
         }
-        return NBTLoader.fromItem(s.getItem()).setBoolean(instance.getConfig().getString("keep_rune.item.nbt_tag"), true).toItem(s.getItem());
+        return NBTLoader.fromItem(s.getItem()).setBoolean(instance.getConfig().getString("keep_rune.item.nbt_tag"), true).toItem(s.getItem()).clone();
     }
 
     public static boolean isKeepRune(ItemStack item){

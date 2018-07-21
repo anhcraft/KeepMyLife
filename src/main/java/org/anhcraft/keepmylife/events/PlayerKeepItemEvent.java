@@ -5,16 +5,16 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
+import java.util.LinkedList;
 
 public class PlayerKeepItemEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private List<ItemStack> dropItems;
-    private List<ItemStack> keepItems;
+    private LinkedList<ItemStack> dropItems;
+    private LinkedList<ItemStack> keepItems;
     private boolean keepExp;
     private Player player;
 
-    public PlayerKeepItemEvent(List<ItemStack> dropItems, List<ItemStack> keepItems, boolean keepExp, Player player) {
+    public PlayerKeepItemEvent(LinkedList<ItemStack> dropItems, LinkedList<ItemStack> keepItems, boolean keepExp, Player player) {
         this.dropItems = dropItems;
         this.keepItems = keepItems;
         this.keepExp = keepExp;
@@ -42,19 +42,11 @@ public class PlayerKeepItemEvent extends Event {
         this.keepExp = keepExp;
     }
 
-    public List<ItemStack> getKeepItems() {
+    public LinkedList<ItemStack> getKeepItems() {
         return keepItems;
     }
 
-    public void setKeepItems(List<ItemStack> keepItems) {
-        this.keepItems = keepItems;
-    }
-
-    public List<ItemStack> getDropItems() {
+    public LinkedList<ItemStack> getDropItems() {
         return dropItems;
-    }
-
-    public void setDropItems(List<ItemStack> dropItems) {
-        this.dropItems = dropItems;
     }
 }

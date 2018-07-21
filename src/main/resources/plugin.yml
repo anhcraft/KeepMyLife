@@ -1,9 +1,10 @@
 name: KeepMyLife
-version: 1.3.0
+version: 1.3.1
 main: org.anhcraft.keepmylife.KeepMyLife
 authors: [anhcraft]
 depend: [SpaciousLib]
 loadafter: [DeathDropsAPI,SpaciousLib]
 softdepend: [DeathDropsAPI]
-description: A best plugin to keep player's items
+description: The best plugin for keeping player's items
 website: https://anhcraft.org/
+api-version: 1.13

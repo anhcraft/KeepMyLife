@@ -12,8 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 public class DefaultListener implements Listener {
     @EventHandler
@@ -22,8 +21,8 @@ public class DefaultListener implements Listener {
         event.setKeepLevel(true);
         event.setKeepInventory(true);
         if(!p.hasPermission("kml.keep") && !KeepMyLife.getKeepingWorlds().contains(p.getWorld().getName())){
-            List<ItemStack> dropItems = new ArrayList<>();
-            List<ItemStack> keptItems = new ArrayList<>();
+            LinkedList<ItemStack> dropItems = new LinkedList<>();
+            LinkedList<ItemStack> keptItems = new LinkedList<>();
             for(ItemStack item : p.getInventory().getContents()){
                 if(InventoryUtils.isNull(item)){
                     keptItems.add(new ItemStack(Material.AIR, 1));
@@ -40,6 +39,7 @@ public class DefaultListener implements Listener {
                     keptItems.add(item);
                 } else {
                     dropItems.add(item);
+                    keptItems.add(new ItemStack(Material.AIR, 1));
                 }
             }
             PlayerKeepItemEvent ev = new PlayerKeepItemEvent(dropItems, keptItems, true, p);
