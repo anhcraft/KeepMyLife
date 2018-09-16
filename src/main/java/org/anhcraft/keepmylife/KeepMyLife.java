@@ -9,8 +9,6 @@ import org.anhcraft.spaciouslib.command.CommandRunnable;
 import org.anhcraft.spaciouslib.command.SubCommandBuilder;
 import org.anhcraft.spaciouslib.inventory.ItemManager;
 import org.anhcraft.spaciouslib.inventory.RecipeManager;
-import org.anhcraft.spaciouslib.io.DirectoryManager;
-import org.anhcraft.spaciouslib.io.FileManager;
 import org.anhcraft.spaciouslib.nbt.NBTLoader;
 import org.anhcraft.spaciouslib.protocol.ActionBar;
 import org.anhcraft.spaciouslib.protocol.Title;
@@ -18,7 +16,6 @@ import org.anhcraft.spaciouslib.utils.Chat;
 import org.anhcraft.spaciouslib.utils.CommonUtils;
 import org.anhcraft.spaciouslib.utils.GameVersion;
 import org.anhcraft.spaciouslib.utils.InventoryUtils;
-import org.apache.commons.io.IOUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -33,8 +30,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +44,7 @@ public class KeepMyLife extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        saveDefaultConfig();
         init();
         chat.sendSender("&aPlugin've been enabled!");
 
@@ -147,13 +143,6 @@ public class KeepMyLife extends JavaPlugin {
         if(registeredRecipe) {
             new RecipeManager(getKeepRuneRecipe()).unregister();
             registeredRecipe = false;
-        }
-        File f = new File("plugins/KeepMylife/");
-        new DirectoryManager(f).mkdirs();
-        try {
-            new FileManager(new File(f, "config.yml")).initFile(IOUtils.toByteArray(getClass().getResourceAsStream("/config.yml")));
-        } catch(IOException e) {
-            e.printStackTrace();
         }
         reloadConfig();
 
@@ -276,7 +265,7 @@ public class KeepMyLife extends JavaPlugin {
         for(String n : instance.getConfig().getStringList("keep_rune.item.enchants")){
             String[] t = n.split(":");
             s.addEnchant(Enchantment.getByName(t[0].toUpperCase()),
-                    CommonUtils.toIntegerNumber(t[1]));
+                    CommonUtils.toInteger(t[1]));
         }
         return NBTLoader.fromItem(s.getItem()).setBoolean(instance.getConfig().getString("keep_rune.item.nbt_tag"), true).toItem(s.getItem()).clone();
     }
