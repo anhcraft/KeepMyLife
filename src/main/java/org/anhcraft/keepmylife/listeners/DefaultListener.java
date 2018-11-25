@@ -18,7 +18,7 @@ public class DefaultListener implements Listener {
     @EventHandler
     public void death(PlayerDeathEvent event){
         Player p = event.getEntity();
-        event.setKeepLevel(true);
+        event.setKeepLevel(KeepMyLife.conf.getBoolean("general.keep_level", true));
         event.setKeepInventory(true);
         if(!p.hasPermission("kml.keep") && !KeepMyLife.getKeepingWorlds().contains(p.getWorld().getName())){
             LinkedList<ItemStack> dropItems = new LinkedList<>();

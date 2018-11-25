@@ -17,6 +17,9 @@ general:
   # should notify the players when a new version available?
   notify_update: true
 
+  # should we keep player levels?
+  keep_level: true
+
 
 # === KEEP RUNE ===
 # a rune which keeps all items of player one time!
