@@ -4,7 +4,7 @@
     <facet type="minecraft" name="Minecraft">
       <configuration>
         <autoDetectTypes>
-          <platformType>SPIGOT</platformType>
+          <platformType>PAPER</platformType>
         </autoDetectTypes>
       </configuration>
     </facet>
@@ -21,8 +21,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="DeathDropsAPI" level="project" />
     <orderEntry type="library" name="SpaciousLibSpigot" level="project" />
-    <orderEntry type="library" name="spigot" level="project" />
+    <orderEntry type="library" name="akarin-1.13.1" level="project" />
+    <orderEntry type="library" name="DeathDropsAPI" level="project" />
   </component>
 </module>

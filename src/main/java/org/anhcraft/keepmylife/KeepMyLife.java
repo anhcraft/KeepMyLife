@@ -3,7 +3,10 @@ package org.anhcraft.keepmylife;
 import org.anhcraft.keepmylife.listeners.DeathDropsApiListener;
 import org.anhcraft.keepmylife.listeners.DefaultListener;
 import org.anhcraft.keepmylife.tasks.DayNightKeepChecker;
-import org.anhcraft.spaciouslib.builders.command.*;
+import org.anhcraft.spaciouslib.builders.command.ArgumentType;
+import org.anhcraft.spaciouslib.builders.command.ChildCommandBuilder;
+import org.anhcraft.spaciouslib.builders.command.CommandBuilder;
+import org.anhcraft.spaciouslib.builders.command.CommandCallback;
 import org.anhcraft.spaciouslib.inventory.ItemManager;
 import org.anhcraft.spaciouslib.inventory.RecipeManager;
 import org.anhcraft.spaciouslib.io.DirectoryManager;
@@ -27,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +65,22 @@ public class KeepMyLife extends JavaPlugin {
         } else {
             getServer().getPluginManager().registerEvents(new DefaultListener(), this);
         }
-        getServer().getPluginManager().registerEvents(new Updater1501986116("1501986116", this), this);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    if(UpdateChecker.predictLatest(getDescription().getVersion(), UpdateChecker.viaSpiget("31673"))){
+                        chat.sendSender("&a[Updater] This version is latest!");
+                    } else {
+                        chat.sendSender("&c[Updater] Outdated version! Please update in order to receive bug fixes and much more.");
+                    }
+                } catch(IOException e) {
+                    e.printStackTrace();
+                    chat.sendSender("&c[Updater] Failed to check update.");
+                }
+            }
+        }.runTaskAsynchronously(this);
 
         new DayNightKeepChecker().runTaskTimerAsynchronously(this, 0, 40);
 
@@ -85,11 +104,7 @@ public class KeepMyLife extends JavaPlugin {
                     }
                 }).build())
 
-                .addChild("keeps a world temporarily", new ChildCommandBuilder().path("keepworlds add", new CommandCallback() {
-                    @Override
-                    public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
-                    }
-                }).var("world", new CommandCallback() {
+                .addChild("keeps a world temporarily", new ChildCommandBuilder().path("keepworlds add").var("world", new CommandCallback() {
                     @Override
                     public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
                         if(commandSender.hasPermission("kml.cmd.keepworlds.add")){
@@ -102,11 +117,7 @@ public class KeepMyLife extends JavaPlugin {
                     }
                 }, ArgumentType.WORLD).build())
 
-                .addChild("non-keeps a world temporarily", new ChildCommandBuilder().path("keepworlds remove", new CommandCallback() {
-                    @Override
-                    public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
-                    }
-                }).var("world", new CommandCallback() {
+                .addChild("non-keeps a world temporarily", new ChildCommandBuilder().path("keepworlds remove").var("world", new CommandCallback() {
                     @Override
                     public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
                         if(commandSender.hasPermission("kml.cmd.keepworlds.remove")){
