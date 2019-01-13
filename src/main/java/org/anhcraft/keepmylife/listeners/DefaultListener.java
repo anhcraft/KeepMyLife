@@ -28,7 +28,7 @@ public class DefaultListener implements Listener {
                     keptItems.add(new ItemStack(Material.AIR, 1));
                     continue;
                 }
-                if(KeepMyLife.isKeepRune(item) && KeepMyLife.instance.getConfig()
+                if(KeepMyLife.isKeepRune(item) && KeepMyLife.conf
                         .getStringList("keep_rune.worlds").contains(p.getWorld().getName())){
                     item.setAmount(item.getAmount()-1);
                     p.updateInventory();

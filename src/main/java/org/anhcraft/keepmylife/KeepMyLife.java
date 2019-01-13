@@ -39,26 +39,26 @@ import java.util.List;
 import java.util.Set;
 
 public class KeepMyLife extends JavaPlugin {
+    private static final File FOLDER = new File("plugins/KeepMyLife/");
+    private static final File CONFIG_FILE = new File(FOLDER, "config.yml");
     public static KeepMyLife instance;
     public static Chat chat;
     private static Set<String> keepingWorlds = new HashSet<>();
     private static boolean registeredRecipe = false;
     public static FileConfiguration conf;
-    private static File folder = new File("plugins/KeepMyLife/");
-    private static File confFile = new File(folder, "config.yml");
 
     @Override
     public void onEnable() {
         instance = this;
 
-        new DirectoryManager(folder).mkdirs();
+        new DirectoryManager(FOLDER).mkdirs();
         try {
-            new FileManager(confFile).initFile(IOUtils.toByteArray(getClass().getResourceAsStream("/config.yml")));
+            new FileManager(CONFIG_FILE).initFile(IOUtils.toByteArray(getClass().getResourceAsStream("/config.yml")));
         } catch(IOException e) {
             e.printStackTrace();
         }
         init();
-        chat.sendSender("&aPlugin've been enabled!");
+        chat.sendConsole("&aPlugin've been enabled!");
 
         if(getServer().getPluginManager().isPluginEnabled("DeathDropsAPI")){
             getServer().getPluginManager().registerEvents(new DeathDropsApiListener(), this);
@@ -71,18 +71,18 @@ public class KeepMyLife extends JavaPlugin {
             public void run() {
                 try {
                     if(UpdateChecker.predictLatest(getDescription().getVersion(), UpdateChecker.viaSpiget("31673"))){
-                        chat.sendSender("&a[Updater] This version is latest!");
+                        chat.sendConsole("&a[Updater] This version is latest!");
                     } else {
-                        chat.sendSender("&c[Updater] Outdated version! Please update in order to receive bug fixes and much more.");
+                        chat.sendConsole("&c[Updater] Outdated version! Please update in order to receive bug fixes and much more.");
                     }
                 } catch(IOException e) {
                     e.printStackTrace();
-                    chat.sendSender("&c[Updater] Failed to check update.");
+                    chat.sendConsole("&c[Updater] Failed to check update.");
                 }
             }
         }.runTaskAsynchronously(this);
 
-        new DayNightKeepChecker().runTaskTimerAsynchronously(this, 0, 40);
+        new DayNightKeepChecker().runTaskTimerAsynchronously(this, 20, 40);
 
         new CommandBuilder("kml", new CommandCallback() {
             @Override
@@ -94,12 +94,12 @@ public class KeepMyLife extends JavaPlugin {
                     @Override
                     public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
                         if(commandSender.hasPermission("kml.cmd.keepworlds.list")){
-                            chat.sendSender("&fList of current keeping-worlds:", commandSender);
+                            chat.sendCommandSender("&fList of current keeping-worlds:", commandSender);
                             for(String x : getKeepingWorlds()){
-                                chat.sendSenderNoPrefix("&a"+x, commandSender);
+                                chat.sendCommandSenderNoPrefix("&a"+x, commandSender);
                             }
                         } else {
-                            chat.sendSender("&cYou don't have permissions!", commandSender);
+                            chat.sendCommandSender("&cYou don't have permissions!", commandSender);
                         }
                     }
                 }).build())
@@ -109,10 +109,10 @@ public class KeepMyLife extends JavaPlugin {
                     public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
                         if(commandSender.hasPermission("kml.cmd.keepworlds.add")){
                             getKeepingWorlds().add(s);
-                            chat.sendSender("&aNow keeping the world " + s, commandSender);
-                            chat.sendSender("&cWarning: this won't work in any worlds using the day/night keep feature", commandSender);
+                            chat.sendCommandSender("&aNow keeping the world " + s, commandSender);
+                            chat.sendCommandSender("&cWarning: this won't work in any worlds using the day/night keep feature", commandSender);
                         } else {
-                            chat.sendSender("&cYou don't have permissions!", commandSender);
+                            chat.sendCommandSender("&cYou don't have permissions!", commandSender);
                         }
                     }
                 }, ArgumentType.WORLD).build())
@@ -122,10 +122,10 @@ public class KeepMyLife extends JavaPlugin {
                     public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
                         if(commandSender.hasPermission("kml.cmd.keepworlds.remove")){
                             getKeepingWorlds().remove(s);
-                            chat.sendSender("&aNow no longer keep the world " + s, commandSender);
-                            chat.sendSender("&cWarning: this won't work in any worlds using the day/night keep feature", commandSender);
+                            chat.sendCommandSender("&aNow no longer keep the world " + s, commandSender);
+                            chat.sendCommandSender("&cWarning: this won't work in any worlds using the day/night keep feature", commandSender);
                         } else {
-                            chat.sendSender("&cYou don't have permissions!", commandSender);
+                            chat.sendCommandSender("&cYou don't have permissions!", commandSender);
                         }
                     }
                 }, ArgumentType.WORLD).build())
@@ -139,10 +139,10 @@ public class KeepMyLife extends JavaPlugin {
                                 p.getInventory().addItem(getKeepRune());
                                 p.updateInventory();
                             } else {
-                                chat.sendSender("&cYou must be a player in-game!", commandSender);
+                                chat.sendCommandSender("&cYou must be a player in-game!", commandSender);
                             }
                         } else {
-                            chat.sendSender("&cYou don't have permissions!", commandSender);
+                            chat.sendCommandSender("&cYou don't have permissions!", commandSender);
                         }
                     }
                 }).build())
@@ -152,9 +152,9 @@ public class KeepMyLife extends JavaPlugin {
                     public void run(CommandBuilder commandBuilder, CommandSender commandSender, int i, String[] strings, int i1, String s) {
                         if(commandSender.hasPermission("kml.cmd.reload")){
                             init();
-                            chat.sendSender("&aReloaded the configuration!", commandSender);
+                            chat.sendCommandSender("&aReloaded the configuration!", commandSender);
                         } else {
-                            chat.sendSender("&cYou don't have permissions!", commandSender);
+                            chat.sendCommandSender("&cYou don't have permissions!", commandSender);
                         }
                     }
                 }).build())
@@ -168,7 +168,7 @@ public class KeepMyLife extends JavaPlugin {
             new RecipeManager(getKeepRuneRecipe()).unregister();
             registeredRecipe = false;
         }
-        conf = YamlConfiguration.loadConfiguration(confFile);
+        conf = YamlConfiguration.loadConfiguration(CONFIG_FILE);
 
         chat = new Chat(conf.getString("general.prefix"));
         if(conf.getBoolean("keep_rune.recipe.enable")){
@@ -180,7 +180,7 @@ public class KeepMyLife extends JavaPlugin {
 
     @Override
     public void onDisable(){
-        chat.sendSender("&aPlugin've been disabled!");
+        chat.sendConsole("&aPlugin've been disabled!");
     }
 
     public static void keepRuneUsed(Player p) {
@@ -228,7 +228,7 @@ public class KeepMyLife extends JavaPlugin {
 
     public static void dayNight(String tm, World w) {
         if(conf.getBoolean("keep_items_daynight.messages.enable")){
-            chat.sendGlobal(conf.getString("keep_items_daynight.messages."+tm).replace("<world>", w.getName()), w);
+            chat.broadcast(conf.getString("keep_items_daynight.messages."+tm).replace("<world>", w.getName()), w);
         }
         if(conf.getBoolean("keep_items_daynight.title.enable")){
             Title.create(conf.getString("keep_items_daynight.title."

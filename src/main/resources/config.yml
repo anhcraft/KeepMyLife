@@ -16,7 +16,6 @@ general:
   prefix: "&b[KML] "
   # should notify the players when a new version available?
   notify_update: true
-
   # should we keep player levels?
   keep_level: true
 
@@ -161,13 +160,12 @@ keep_items_whitelist:
 
 keep_items_filter:
   world:
+    # keep any diamonds which are named '&a&lProtected Item'
     '0':
-      material: EMERALD
-      durability: 0
-    '1':
       material: DIAMOND
       durability: 0
       name: '&a&lProtected Item'
+      # keep any diamonds which contains at least one lore line of '&c&l[Protected]'
     '2':
       material: DIAMOND
       durability: 0
@@ -175,5 +173,6 @@ keep_items_filter:
     '3':
       material: DIAMOND
       durability: 0
-      # this chance must from 0 to 1, ex: 0.2 means 20% of chance this item won't keep even it passes all requirements
+      # this chance must from 0 to 1
+      # eg: 0.2 means 20% of chance this item won't keep even it passes all requirements before
       fail_chance: 0.2

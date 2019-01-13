@@ -10,11 +10,11 @@ import java.util.List;
 public class DayNightKeepChecker extends BukkitRunnable {
     @Override
     public void run() {
-        List<String> worlds = KeepMyLife.instance.getConfig().getStringList("keep_items_daynight.worlds");
+        List<String> worlds = KeepMyLife.conf.getStringList("keep_items_daynight.worlds");
         for(String world : worlds) {
             World w = Bukkit.getWorld(world);
             if(w != null) {
-                String x = KeepMyLife.instance.getConfig()
+                String x = KeepMyLife.conf
                         .getString("keep_items_daynight.keep_time");
                 if(x.equalsIgnoreCase("day")) {
                     if(KeepMyLife.isDay(w.getTime()) && !KeepMyLife.getKeepingWorlds().contains(world)) {

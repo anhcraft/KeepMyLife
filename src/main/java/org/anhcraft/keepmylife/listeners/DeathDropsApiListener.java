@@ -21,7 +21,7 @@ public class DeathDropsApiListener implements Listener {
                 return;
             }
             for(ItemStack item : p.getInventory().getContents()){
-                if(!InventoryUtils.isNull(item) && KeepMyLife.isKeepRune(item) && KeepMyLife.instance.getConfig()
+                if(!InventoryUtils.isNull(item) && KeepMyLife.isKeepRune(item) && KeepMyLife.conf
                         .getStringList("keep_rune.worlds").contains(p.getWorld().getName())){
                     event.setCancelled(true);
                     return;
