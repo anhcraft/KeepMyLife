@@ -213,7 +213,7 @@ public class KeepMyLife extends JavaPlugin {
                 if(s.isSet("name") && !new ItemManager(item).getName().equals(Chat.color(s.getString("name")))) {
                     continue;
                 }
-                if(s.isSet("contains_lore") && !new ItemManager(item).getLores()
+                if(s.isSet("contains_lore") && !new ItemManager(item).getLore()
                         .contains(Chat.color(s.getString("contains_lore")))) {
                     continue;
                 }
@@ -278,7 +278,7 @@ public class KeepMyLife extends JavaPlugin {
                 Material.valueOf(conf.getString("keep_rune.item.material").toUpperCase()),
                 1,
                 (short) conf.getInt("keep_rune.item.durability")
-        ).setLores(conf.getStringList("keep_rune.item.lores"))
+        ).setLore(conf.getStringList("keep_rune.item.lores"))
                 .setUnbreakable(conf.getBoolean("keep_rune.item.unbreakable"));
         if(conf.getBoolean("keep_rune.item.hide_unbreakable")){
             s.addFlag(ItemFlag.HIDE_UNBREAKABLE);
