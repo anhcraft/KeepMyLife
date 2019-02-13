@@ -3,8 +3,6 @@ version: ${project.version}
 main: org.anhcraft.keepmylife.KeepMyLife
 authors: [anhcraft]
 depend: [SpaciousLib]
-loadafter: [DeathDropsAPI,SpaciousLib]
-softdepend: [DeathDropsAPI]
 description: The best plugin for keeping players items
 website: https://anhcraft.org/
 api-version: 1.13
