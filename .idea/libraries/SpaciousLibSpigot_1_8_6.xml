@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SpaciousLibSpigot-1.8.6">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../SpaciousLib/SpaciousLibSpigot/target/SpaciousLibSpigot-1.8.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

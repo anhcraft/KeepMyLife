@@ -1,7 +1,6 @@
 package org.anhcraft.keepmylife;
 
-import org.anhcraft.keepmylife.listeners.DeathDropsApiListener;
-import org.anhcraft.keepmylife.listeners.DefaultListener;
+import org.anhcraft.keepmylife.events.PlayerKeepItemEvent;
 import org.anhcraft.keepmylife.tasks.DayNightKeepChecker;
 import org.anhcraft.spaciouslib.builders.command.ArgumentType;
 import org.anhcraft.spaciouslib.builders.command.ChildCommandBuilder;
@@ -15,30 +14,30 @@ import org.anhcraft.spaciouslib.nbt.NBTLoader;
 import org.anhcraft.spaciouslib.protocol.ActionBar;
 import org.anhcraft.spaciouslib.protocol.Title;
 import org.anhcraft.spaciouslib.utils.*;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class KeepMyLife extends JavaPlugin {
+public class KeepMyLife extends JavaPlugin implements Listener {
     private static final File FOLDER = new File("plugins/KeepMyLife/");
     private static final File CONFIG_FILE = new File(FOLDER, "config.yml");
     public static KeepMyLife instance;
@@ -60,27 +59,7 @@ public class KeepMyLife extends JavaPlugin {
         init();
         chat.sendConsole("&aPlugin've been enabled!");
 
-        if(getServer().getPluginManager().isPluginEnabled("DeathDropsAPI")){
-            getServer().getPluginManager().registerEvents(new DeathDropsApiListener(), this);
-        } else {
-            getServer().getPluginManager().registerEvents(new DefaultListener(), this);
-        }
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    if(UpdateChecker.predictLatest(getDescription().getVersion(), UpdateChecker.viaSpiget("31673"))){
-                        chat.sendConsole("&a[Updater] This version is latest!");
-                    } else {
-                        chat.sendConsole("&c[Updater] Outdated version! Please update in order to receive bug fixes and much more.");
-                    }
-                } catch(IOException e) {
-                    e.printStackTrace();
-                    chat.sendConsole("&c[Updater] Failed to check update.");
-                }
-            }
-        }.runTaskAsynchronously(this);
+        getServer().getPluginManager().registerEvents(this, this);
 
         new DayNightKeepChecker().runTaskTimerAsynchronously(this, 20, 40);
 
@@ -299,6 +278,46 @@ public class KeepMyLife extends JavaPlugin {
     }
 
     public static Set<String> getKeepingWorlds() {
-        return keepingWorlds;
+        return new HashSet<>(keepingWorlds);
+    }
+
+    @EventHandler
+    public void death(PlayerDeathEvent event){
+        Player p = event.getEntity();
+        event.setKeepLevel(KeepMyLife.conf.getBoolean("general.keep_level", true));
+        event.setKeepInventory(true);
+        if(!p.hasPermission("kml.keep") && !KeepMyLife.getKeepingWorlds().contains(p.getWorld().getName())){
+            LinkedList<ItemStack> dropItems = new LinkedList<>();
+            LinkedList<ItemStack> keptItems = new LinkedList<>();
+            for(ItemStack item : p.getInventory().getContents()){
+                if(InventoryUtils.isNull(item)){
+                    keptItems.add(new ItemStack(Material.AIR, 1));
+                    continue;
+                }
+                if(KeepMyLife.isKeepRune(item) && KeepMyLife.conf
+                        .getStringList("keep_rune.worlds").contains(p.getWorld().getName())){
+                    item.setAmount(item.getAmount()-1);
+                    p.updateInventory();
+                    KeepMyLife.keepRuneUsed(p);
+                    return;
+                }
+                if(KeepMyLife.filter(item, p.getWorld().getName())){
+                    keptItems.add(item);
+                } else {
+                    dropItems.add(item);
+                    keptItems.add(new ItemStack(Material.AIR, 1));
+                }
+            }
+            PlayerKeepItemEvent ev = new PlayerKeepItemEvent(dropItems, keptItems, true, p);
+            Bukkit.getServer().getPluginManager().callEvent(ev);
+            event.setKeepLevel(ev.isKeepExp());
+            dropItems = ev.getDropItems();
+            keptItems = ev.getKeepItems();
+            p.getInventory().setContents(CommonUtils.toArray(keptItems, ItemStack.class));
+            p.updateInventory();
+            for(ItemStack item : dropItems){
+                p.getWorld().dropItemNaturally(p.getLocation(), item);
+            }
+        }
     }
 }
