@@ -1,23 +1,23 @@
-package org.anhcraft.keepmylife.events;
+package dev.anhcraft.keepmylife.api.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.LinkedList;
+import java.util.List;
 
-public class PlayerKeepItemEvent extends Event {
+public class KeepItemEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private LinkedList<ItemStack> dropItems;
-    private LinkedList<ItemStack> keepItems;
-    private boolean keepExp;
+    private List<ItemStack> dropItems;
+    private List<ItemStack> keepItems;
+    private boolean keepLevel;
     private Player player;
 
-    public PlayerKeepItemEvent(LinkedList<ItemStack> dropItems, LinkedList<ItemStack> keepItems, boolean keepExp, Player player) {
+    public KeepItemEvent(Player player, List<ItemStack> dropItems, List<ItemStack> keepItems, boolean keepLevel) {
         this.dropItems = dropItems;
         this.keepItems = keepItems;
-        this.keepExp = keepExp;
+        this.keepLevel = keepLevel;
         this.player = player;
     }
 
@@ -34,19 +34,19 @@ public class PlayerKeepItemEvent extends Event {
         return player;
     }
 
-    public boolean isKeepExp() {
-        return keepExp;
+    public boolean isKeepLevel() {
+        return keepLevel;
     }
 
-    public void setKeepExp(boolean keepExp) {
-        this.keepExp = keepExp;
+    public void setKeepLevel(boolean keepLevel) {
+        this.keepLevel = keepLevel;
     }
 
-    public LinkedList<ItemStack> getKeepItems() {
+    public List<ItemStack> getKeepItems() {
         return keepItems;
     }
 
-    public LinkedList<ItemStack> getDropItems() {
+    public List<ItemStack> getDropItems() {
         return dropItems;
     }
 }

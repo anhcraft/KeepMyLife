@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: dev.anhcraft:craftkit.cb_1_13_r1:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/dev/anhcraft/craftkit.cb_1_13_r1/1.0.0-SNAPSHOT/craftkit.cb_1_13_r1-1.0.0-20190605.140803-2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/dev/anhcraft/craftkit.cb_1_13_r1/1.0.0-SNAPSHOT/craftkit.cb_1_13_r1-1.0.0-20190605.140803-2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/dev/anhcraft/craftkit.cb_1_13_r1/1.0.0-SNAPSHOT/craftkit.cb_1_13_r1-1.0.0-20190605.140803-2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

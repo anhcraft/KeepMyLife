@@ -7,172 +7,74 @@
 #     `--' '--' `----' `----'|  |-' `--'   `--'.-'  /   `-----'`--'`--'   `----'
 #                            `--'              `---'
 
+# Plugin messaging prefix
+message_prefix: "&bKML: &f"
+# Do you allow this plugin to check for new updates?
+check_update: true
 
 
-# === GENERAL ===
-
-general:
-  # plugin's message prefix
-  prefix: "&b[KML] "
-  # should notify the players when a new version available?
-  notify_update: true
-  # should we keep player levels?
-  keep_level: true
-
-
-# === KEEP RUNE ===
-# a rune which keeps all items of player one time!
-# after used, the rune will be removed
-# If your server uses DeathDropsAPI, the messages of keep rune feature won't work
-
-keep_rune:
-  recipe:
-    # can players craft runes?
-    enable: true
-    shape:
-    - "ABA"
-    - "BCB"
-    - "ABA"
-    materials:
-    - "A emerald"
-    - "B blaze_powder"
-    - "C nether_star"
-
-  # adds the world which you want to use this feature here:
-  worlds:
-  - world
-  - world_nether
-
-  # a chat message to send to the player when a keep rune was used
-  chat:
-    enable: true
-    message: "&aYour items were saved by keep rune :D"
-
-  # a title message to send to the player when a keep rune was used
-  title:
-    enable: false
-    title: "&aWelcome back!"
-    subtitle: "&6Used keep rune"
-
-  # an action bar message to send to the player when a keep rune was used
-  actionbar:
-    enable: false
-    message: ""
-
+# Configuration for soul gem
+soul_gem:
+  # This section uses ABIF (anhcraft's bukkit item format)
+  # Reference: https://github.com/anhcraft/ABIF/blob/master/README.md
   item:
-    name: "&a&lKeep &e&lRune"
     material: EMERALD
-    durability: 0
-    lores:
-    - "&fAn useful rune will keep your life one time!"
-    - "&cJust put this item in your inventory"
-    - "&f"
-    - "&f-= KeepMylife =-"
-    enchants:
-    - DURABILITY:1
-    unbreakable: true
-    hide_unbreakable: true
-    hide_enchants: true
+    name: "&6&lSoul &a&lGem"
+    lore:
+      - "&fEach gem can save your items one time!"
+    enchant:
+      durability: 1
+    flag:
+      - hide_enchants
 
-    # NBT Tag to determine an item is a keep rune
-    # Don't change this if your players've already used keep runes
-    nbt_tag: "keepmylife_keeprune"
+  # The name of the NBT tag which KML uses to determine an item is the soul gem
+  # Do not change this if your players have already used the soul gems
+  nbt_tag: "kml_soul_gem"
 
 
+# Configuration for world groups
+world_groups:
+  # First group
+  group1:
+    # List of worlds in this group
+    worlds:
+      - abcxyz
+    allow_soul_gem: true # all worlds in this group allow players to use soul gems
+    # Keep inventories based on Minecraft time (https://minecraft.gamepedia.com/Day-night_cycle)
+    time_keep:
+      # This is day settings
+      day: # <-- you can change the name
+        from: 0
+        to: 12516 # in Minecraft ticks
+        keep_item: true # it means: Over the day at "abcxyz" world, all lost items will be kept
+        keep_level: true # keep player level
+        sound: "entity_firework_twinkle" # case-insensitive | for 1.13+: ENTITY_FIREWORK_ROCKET_TWINKLE
+        broadcast:
+          # these messages will appear on players chat box
+          chat:
+            - "&a&lGood morning! Keep inventory enabled."
+      # This is night settings
+      night:
+        from: 12516
+        to: 24000
+        keep_item: false # it means: Over the night at "abcxyz" world, all items will not be kept
+        keep_level: true
+        sound: "ENTITY_ENDERDRAGON_AMBIENT" # for 1.13+: ENTITY_ENDER_DRAGON_AMBIENT
+        broadcast:
+          chat:
+            - "&c&lOops... It is night! Keep inventory disabled :<"
+          # below message will appear on players action bar
+          action_bar: "&cBe careful with your items!"
 
-
-
-# === DAY/NIGHT ===
-# keep items of players depends on the time of their world
-
-keep_items_daynight:
-  # if you want to keep at night, change this to "night"
-  keep_time: day
-
-  # time ended the morning and start the evening
-  # WARNING: this plugin uses Minecraft ticks
-  #
-  # 1000: Time when using the /time set day command.
-  # 6000: Noon; the sun is at its zenith.
-  # 13000: Time when using the /time set night command.
-  # 18000: Midnight; the moon is at its zenith.
-  #
-  # http://minecraft.gamepedia.com/Day-night_cycle
-  time_begin_night: 13000
-
-  # sound
-  sound:
-    enable: false
-    # 1.8: FIREWORK_TWINKLE
-    # 1.13: ENTITY_FIREWORK_ROCKET_TWINKLE
-    keep: "ENTITY_FIREWORK_TWINKLE"
-    # 1.8: ENDERDRAGON_GROWL
-    # 1.13: ENTITY_ENDER_DRAGON_AMBIENT
-    nonkeep: "ENTITY_ENDERDRAGON_AMBIENT"
-
-  # list of world which you want to use this feature
-  worlds:
-  - "world"
-  # - "example"
-  # - "server"
-  # - "survival"
-
-  # chat messages to broadcast to anyone in the world
-  messages:
-    enable: true
-    keep: "&6Now is the morning, kept items in &c<world> &6!"
-    nonkeep: "&6Now is the evening, non-kept items in &c<world> &6!"
-
-  # title messages to send to anyone in the world
-  title:
-    enable: true
-    keep:
-      title: "&aNow is the morning!"
-      subtitle: "&fKept all player's items :)"
-    nonkeep:
-      title: "&aNow is the evening!"
-      subtitle: "&fNon-kept all player's items :("
-
-  # action bar messages to send to anyone in the world
-  actionbar:
-    enable: false
-    keep: "&cKept item!"
-    nonkeep: "&cNon-kept item!"
-
-
-
-
-
-# === WHITELIST ===
-# always keeps in a specific world
-
-keep_items_whitelist:
-- "protected_world"
-#- "world_nether"
-#- "world_the_end"
-
-
-
-
-
-# === KEEP ITEMS FILTER ===
-# always keeps specific items
-
-keep_items_filter:
-  world:
-    # keep any diamonds which are named '&a&lProtected Item'
-    '0':
-      material: DIAMOND
-      durability: 0
-      name: '&a&lProtected Item'
-      # keep any diamonds which contains at least one lore line of '&c&l[Protected]'
-    '2':
-      material: DIAMOND
-      durability: 0
-      contains_lore: '&c&l[Protected]'
-    '3':
-      material: DIAMOND
-      durability: 0
-      # this chance must from 0 to 1
-      # eg: 0.2 means 20% of chance this item won't keep even it passes all requirements before
-      fail_chance: 0.2
+  # Second group
+  group2:
+    worlds:
+      - example
+    # This option overrides the one above
+    allow_soul_gem: true # Now, only the "example" world does not allow the soul gems, others still allow
+    time_keep:
+      "0":
+        # 0 to 2400 means "the whole day"
+        from: 0
+        to: 24000
+        keep_item: true # <-- always keep xD

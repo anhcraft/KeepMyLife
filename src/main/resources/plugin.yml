@@ -1,8 +1,8 @@
 name: KeepMyLife
 version: ${project.version}
-main: org.anhcraft.keepmylife.KeepMyLife
+main: dev.anhcraft.keepmylife.KeepMyLife
 authors: [anhcraft]
-depend: [SpaciousLib]
-description: The best plugin for keeping players items
-website: https://anhcraft.org/
-api-version: 1.13
+depend: [CraftKit]
+description: ${project.description}
+website: https://anhcraft.dev/
+api-version: "1.13"
