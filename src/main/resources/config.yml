@@ -46,7 +46,7 @@ world_groups:
       day: # <-- you can change the name
         from: 0
         to: 12516 # in Minecraft ticks
-        keep_item: true # it means: Over the day at "abcxyz" world, all lost items will be kept
+        keep_item: true # keep items
         keep_level: true # keep player level
         sound: "entity_firework_twinkle" # case-insensitive | for 1.13+: ENTITY_FIREWORK_ROCKET_TWINKLE
         broadcast:
@@ -57,7 +57,7 @@ world_groups:
       night:
         from: 12516
         to: 24000
-        keep_item: false # it means: Over the night at "abcxyz" world, all items will not be kept
+        keep_item: false
         keep_level: true
         sound: "ENTITY_ENDERDRAGON_AMBIENT" # for 1.13+: ENTITY_ENDER_DRAGON_AMBIENT
         broadcast:
@@ -70,11 +70,9 @@ world_groups:
   group2:
     worlds:
       - example
-    # This option overrides the one above
-    allow_soul_gem: true # Now, only the "example" world does not allow the soul gems, others still allow
+    allow_soul_gem: true
     time_keep:
       "0":
-        # 0 to 2400 means "the whole day"
         from: 0
         to: 24000
         keep_item: true # <-- always keep xD
