@@ -49,7 +49,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_13_r1:1.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_13_r2:1.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_14_r1:1.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: dev.anhcraft:abif:1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:abif:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:acf-paper:0.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:acf-bukkit:0.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:acf-core:0.5.0-SNAPSHOT" level="project" />

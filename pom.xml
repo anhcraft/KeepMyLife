@@ -110,12 +110,8 @@
     <distributionManagement>
         <repository>
             <id>nexus</id>
-            <url>https://anhcraft.dev:7554/repository/maven-releases/</url>
+            <url>https://anhcraft.dev:7554/repository/spigot/</url>
         </repository>
-        <snapshotRepository>
-            <id>nexus</id>
-            <url>https://anhcraft.dev:7554/repository/maven-snapshots/</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
@@ -130,12 +126,6 @@
             <artifactId>craftkit.spigot</artifactId>
             <version>1.0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>dev.anhcraft</groupId>
-            <artifactId>abif</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>co.aikar</groupId>
