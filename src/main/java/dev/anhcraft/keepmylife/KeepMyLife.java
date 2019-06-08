@@ -18,6 +18,7 @@ import dev.anhcraft.keepmylife.api.ApiManager;
 import dev.anhcraft.keepmylife.api.TimeKeep;
 import dev.anhcraft.keepmylife.api.WorldGroup;
 import dev.anhcraft.keepmylife.api.events.KeepItemEvent;
+import dev.anhcraft.keepmylife.api.events.SoulGemUseEvent;
 import dev.anhcraft.keepmylife.cmd.RootCmd;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -61,8 +62,6 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
         var tag = (CompoundTag) compound.get("tag");
         if(tag == null) tag = new CompoundTag();
         tag.put(CONF.getString("soul_gem.nbt_tag"), new LongTag(System.currentTimeMillis()));
-        tag.save();
-        System.out.println("key set: "+ String.join(" ", tag.getValue().keySet()));
         compound.put("tag", tag);
         soulGem = compound.save(soulGem);
 
@@ -129,8 +128,8 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
     public boolean isSoulGem(ItemStack gem) {
         if(gem == null) return false;
         var compound = CompoundTag.of(gem);
-        return compound.has("tag") && ((CompoundTag) compound.get("tag"))
-                .getValue().containsKey(CONF.getString("soul_gem.nbt_tag")); // TODO No longer use #getValue (if CraftKit has fixed the bug)
+        return compound.has("tag") && ((CompoundTag) Objects.requireNonNull(compound.get("tag")))
+                .has(CONF.getString("soul_gem.nbt_tag"));
     }
 
     @Override
@@ -174,14 +173,21 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
             LinkedList<ItemStack> tempItems = new LinkedList<>();
             var items = p.getInventory().getContents();
             var has = false;
+            var cancelled = false;
             for (ItemStack item : items) {
                 // do not remove "air item" as we must keep the item order
                 if (ItemUtil.isNull(item)) keptItems.add(new ItemStack(Material.AIR, 1));
-                else if(!has && isSoulGem(item)){ // we only need one valid soul gem
-                    has = true;
-                    item.setAmount(item.getAmount()-1);
-                    keptItems.addAll(tempItems); // keep previous items, the temp is not needed from now
-                    keptItems.add(item);
+                else if(!cancelled && !has && isSoulGem(item)){ // we only need one valid soul gem
+                    SoulGemUseEvent ev = new SoulGemUseEvent(p);
+                    getServer().getPluginManager().callEvent(ev);
+                    if(ev.isCancelled()) {
+                        cancelled = true;
+                    } else {
+                        has = true;
+                        item.setAmount(item.getAmount() - 1);
+                        keptItems.addAll(tempItems); // keep previous items, the temp is not needed from now
+                        keptItems.add(item);
+                    }
                 } else if(has) keptItems.add(item);
                 else tempItems.add(item); // do not remove item directly, we do not know if the inventory has a soul gem
             }
