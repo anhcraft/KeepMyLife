@@ -4,6 +4,7 @@ import co.aikar.commands.PaperCommandManager;
 import dev.anhcraft.abif.ABIF;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.CompoundTag;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.LongTag;
+import dev.anhcraft.craftkit.cb_common.lang.enumeration.NMSVersion;
 import dev.anhcraft.craftkit.common.lang.annotation.RequiredCleaner;
 import dev.anhcraft.craftkit.common.utils.ChatUtil;
 import dev.anhcraft.craftkit.common.utils.SpigetApiUtil;
@@ -11,6 +12,8 @@ import dev.anhcraft.craftkit.helpers.TaskHelper;
 import dev.anhcraft.craftkit.kits.chat.ActionBar;
 import dev.anhcraft.craftkit.kits.chat.Chat;
 import dev.anhcraft.craftkit.utils.ItemUtil;
+import dev.anhcraft.craftkit.utils.MaterialUtil;
+import dev.anhcraft.craftkit.utils.RecipeUtil;
 import dev.anhcraft.jvmkit.utils.ArrayUtil;
 import dev.anhcraft.jvmkit.utils.CollectionUtil;
 import dev.anhcraft.jvmkit.utils.FileUtil;
@@ -21,6 +24,7 @@ import dev.anhcraft.keepmylife.api.events.KeepItemEvent;
 import dev.anhcraft.keepmylife.api.events.SoulGemUseEvent;
 import dev.anhcraft.keepmylife.cmd.RootCmd;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -29,12 +33,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener {
@@ -44,6 +49,7 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
     private static final Map<World, TimeKeep> TK = new HashMap<>();
     public Chat chat;
     private static ItemStack soulGem;
+    private static Recipe currentRecipe;
 
     public void initConf() {
         getDataFolder().mkdir();
@@ -83,6 +89,19 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
                 wg.getTimeKeep().add(tk);
             }
             wg.getWorlds().forEach(s -> WG.put(s, wg));
+        }
+
+        if(currentRecipe != null) RecipeUtil.unregister(currentRecipe);
+        if(CONF.getBoolean("soul_gem.recipe.enable") && NMSVersion.getNMSVersion()
+                .isNewerOrSame(NMSVersion.v1_12_R1)) {
+            var recipe = new ShapedRecipe(new NamespacedKey(this, "soul_gem"), soulGem);
+            recipe.shape(CollectionUtil.toArray(CONF.getStringList("soul_gem.recipe.shape"), String.class));
+            List<String> a = CONF.getStringList("soul_gem.recipe.ingredients");
+            for(String x : a){
+                x = x.trim();
+                recipe.setIngredient(x.charAt(0), MaterialUtil.fromString(x.substring(2)));
+            }
+            RecipeUtil.register(recipe);
         }
     }
 

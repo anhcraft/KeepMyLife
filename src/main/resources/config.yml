@@ -31,6 +31,17 @@ soul_gem:
   # Do not change this if your players have already used the soul gems
   nbt_tag: "kml_soul_gem"
 
+  recipe:
+    enable: false
+    shape:
+      - "ABA"
+      - "BCB"
+      - "ABA"
+    ingredients:
+      - "A emerald"
+      - "B blaze_powder"
+      - "C nether_star"
+
 
 # Configuration for world groups
 world_groups:
