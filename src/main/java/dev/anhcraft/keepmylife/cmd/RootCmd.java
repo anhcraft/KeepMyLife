@@ -6,7 +6,6 @@ import dev.anhcraft.craftkit.kits.chat.Chat;
 import dev.anhcraft.keepmylife.KeepMyLife;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 @CommandAlias("kml|keepmylife")
 public class RootCmd extends BaseCommand {

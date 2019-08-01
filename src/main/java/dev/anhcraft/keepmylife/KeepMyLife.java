@@ -17,7 +17,7 @@ import dev.anhcraft.craftkit.utils.RecipeUtil;
 import dev.anhcraft.jvmkit.utils.ArrayUtil;
 import dev.anhcraft.jvmkit.utils.CollectionUtil;
 import dev.anhcraft.jvmkit.utils.FileUtil;
-import dev.anhcraft.keepmylife.api.ApiManager;
+import dev.anhcraft.keepmylife.api.KMLApi;
 import dev.anhcraft.keepmylife.api.TimeKeep;
 import dev.anhcraft.keepmylife.api.WorldGroup;
 import dev.anhcraft.keepmylife.api.events.KeepItemEvent;
@@ -33,7 +33,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -42,14 +41,19 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener {
+public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
     private static final YamlConfiguration CONF = new YamlConfiguration();
     private static final Map<String, WorldGroup> WG = new HashMap<>();
     @RequiredCleaner
     private static final Map<World, TimeKeep> TK = new HashMap<>();
     public Chat chat;
     private static ItemStack soulGem;
-    private static Recipe currentRecipe;
+    private static ShapedRecipe currentRecipe;
+    private static KMLApi api;
+
+    public static KMLApi getApi() {
+        return api;
+    }
 
     public void initConf() {
         getDataFolder().mkdir();
@@ -94,19 +98,20 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
         if(currentRecipe != null) RecipeUtil.unregister(currentRecipe);
         if(CONF.getBoolean("soul_gem.recipe.enable") && NMSVersion.getNMSVersion()
                 .isNewerOrSame(NMSVersion.v1_12_R1)) {
-            var recipe = new ShapedRecipe(new NamespacedKey(this, "soul_gem"), soulGem);
-            recipe.shape(CollectionUtil.toArray(CONF.getStringList("soul_gem.recipe.shape"), String.class));
+            currentRecipe = new ShapedRecipe(new NamespacedKey(this, "soul_gem"), soulGem);
+            currentRecipe.shape(CollectionUtil.toArray(CONF.getStringList("soul_gem.recipe.shape"), String.class));
             List<String> a = CONF.getStringList("soul_gem.recipe.ingredients");
             for(String x : a){
                 x = x.trim();
-                recipe.setIngredient(x.charAt(0), MaterialUtil.fromString(x.substring(2)));
+                currentRecipe.setIngredient(x.charAt(0), MaterialUtil.fromString(x.substring(2)));
             }
-            RecipeUtil.register(recipe);
+            RecipeUtil.register(currentRecipe);
         }
     }
 
     @Override
     public void onEnable(){
+        api = this;
         TaskHelper task = new TaskHelper(this);
         initConf();
 
@@ -122,7 +127,7 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
             }, 60); // okay wait for the task or get the f**king LinkageError
         }
 
-        task.newTimerTask(() -> WG.forEach((key, value) -> {
+        task.newAsyncTimerTask(() -> WG.forEach((key, value) -> {
             var world = getServer().getWorld(key);
             if(world == null) return;
             for(TimeKeep timeKeep : value.getTimeKeep()){
@@ -185,29 +190,36 @@ public final class KeepMyLife extends JavaPlugin implements ApiManager, Listener
         // keeping inventory is always unsafe since it easily causes errors, so we must certain that the inventory has not been kept
         if(event.getKeepInventory()) return;
         event.setKeepInventory(true);
+        event.getDrops().clear();
         List<ItemStack> keptItems = new LinkedList<>(); //  uses linked list to keep the item order
         List<ItemStack> dropItems = new ArrayList<>();
         if(keepItem) keptItems.addAll(ArrayUtil.toList(p.getInventory().getContents()));
         else if(soulGem) {
             LinkedList<ItemStack> tempItems = new LinkedList<>();
             var items = p.getInventory().getContents();
-            var has = false;
+            var hasSoulGem = false;
             var cancelled = false;
             for (ItemStack item : items) {
                 // do not remove "air item" as we must keep the item order
                 if (ItemUtil.isNull(item)) keptItems.add(new ItemStack(Material.AIR, 1));
-                else if(!cancelled && !has && isSoulGem(item)){ // we only need one valid soul gem
+                else if(!cancelled && !hasSoulGem && isSoulGem(item)){ // we only need one valid soul gem
                     SoulGemUseEvent ev = new SoulGemUseEvent(p);
                     getServer().getPluginManager().callEvent(ev);
-                    if(ev.isCancelled()) {
-                        cancelled = true;
-                    } else {
-                        has = true;
+                    if(ev.isCancelled()) cancelled = true;
+                    else {
+                        hasSoulGem = true;
                         item.setAmount(item.getAmount() - 1);
                         keptItems.addAll(tempItems); // keep previous items, the temp is not needed from now
                         keptItems.add(item);
+
+                        CONF.getStringList("soul_gem.messages_on_use").forEach(s -> {
+                            chat.message(p, s);
+                        });
+                        CONF.getStringList("soul_gem.commands_on_use").forEach(s -> {
+                            getServer().dispatchCommand(getServer().getConsoleSender(), String.format(s, p.getName()));
+                        });
                     }
-                } else if(has) keptItems.add(item);
+                } else if(hasSoulGem) keptItems.add(item);
                 else tempItems.add(item); // do not remove item directly, we do not know if the inventory has a soul gem
             }
             dropItems.addAll(tempItems);

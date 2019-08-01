@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>keepmylife</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
     <packaging>jar</packaging>
 
     <name>KeepMyLife</name>
@@ -42,7 +42,7 @@
                 </executions>
                 <configuration>
                     <serverId>nexus</serverId>
-                    <nexusUrl>https://anhcraft.dev:7554/</nexusUrl>
+                    <nexusUrl>https://repo.anhcraft.dev/</nexusUrl>
                     <skipStaging>true</skipStaging>
                 </configuration>
             </plugin>
@@ -95,7 +95,7 @@
     <repositories>
         <repository>
             <id>anhcraft-repo</id>
-            <url>https://anhcraft.dev:7554/repository/mvn/</url>
+            <url>https://repo.anhcraft.dev/repository/mvn/</url>
         </repository>
         <repository>
             <id>spigotmc-repo</id>
@@ -110,7 +110,7 @@
     <distributionManagement>
         <repository>
             <id>nexus</id>
-            <url>https://anhcraft.dev:7554/repository/mvn/</url>
+            <url>https://repo.anhcraft.dev/repository/mvn/</url>
         </repository>
     </distributionManagement>
 
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

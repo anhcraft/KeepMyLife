@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collection;
 import java.util.List;
 
-public interface ApiManager {
+public interface KMLApi {
     ItemStack getSoulGem();
     boolean isSoulGem(ItemStack gem);
     List<World> getKeepItemWorlds();

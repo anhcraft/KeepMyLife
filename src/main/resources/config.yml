@@ -42,6 +42,14 @@ soul_gem:
       - "B blaze_powder"
       - "C nether_star"
 
+  # Messages to be sent after using the gem
+  messages_on_use:
+    - "&aYou've used &6&lSoul &a&lGem"
+
+  # Commands to be executed after using the game
+  commands_on_use:
+    - "give %s apple 1"
+
 
 # Configuration for world groups
 world_groups:
