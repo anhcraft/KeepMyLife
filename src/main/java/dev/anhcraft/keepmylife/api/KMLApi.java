@@ -10,6 +10,6 @@ public interface KMLApi {
     ItemStack getSoulGem();
     boolean isSoulGem(ItemStack gem);
     List<World> getKeepItemWorlds();
-    List<World> getKeepLevelWorlds();
+    List<World> getKeepExpWorlds();
     Collection<WorldGroup> getWorldGroups();
 }

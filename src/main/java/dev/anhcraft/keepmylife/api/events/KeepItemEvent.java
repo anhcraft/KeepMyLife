@@ -11,13 +11,13 @@ public class KeepItemEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private List<ItemStack> dropItems;
     private List<ItemStack> keepItems;
-    private boolean keepLevel;
+    private boolean keepExp;
     private Player player;
 
-    public KeepItemEvent(Player player, List<ItemStack> dropItems, List<ItemStack> keepItems, boolean keepLevel) {
+    public KeepItemEvent(Player player, List<ItemStack> dropItems, List<ItemStack> keepItems, boolean keepExp) {
         this.dropItems = dropItems;
         this.keepItems = keepItems;
-        this.keepLevel = keepLevel;
+        this.keepExp = keepExp;
         this.player = player;
     }
 
@@ -34,12 +34,12 @@ public class KeepItemEvent extends Event {
         return player;
     }
 
-    public boolean isKeepLevel() {
-        return keepLevel;
+    public boolean isKeepExp() {
+        return keepExp;
     }
 
-    public void setKeepLevel(boolean keepLevel) {
-        this.keepLevel = keepLevel;
+    public void setKeepExp(boolean keepExp) {
+        this.keepExp = keepExp;
     }
 
     public List<ItemStack> getKeepItems() {

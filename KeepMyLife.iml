@@ -9,7 +9,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -33,28 +33,35 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.18" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.12-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.spigot:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.common:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:JvmKit:1.0.7" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains:annotations:17.0.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.3.31" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.31" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_common:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_9_r2:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_10_r1:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_11_r1:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_12_r1:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_13_r1:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_13_r2:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_14_r1:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:abif:1.0.6" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:acf-paper:0.5.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:acf-bukkit:0.5.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:acf-core:0.5.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:Table:1.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:DelegatingMap:1.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:locales:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: net.jodah:expiringmap:0.5.8" level="project" />
-    <orderEntry type="library" name="Maven: co.aikar:minecraft-timings:1.0.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.spigot:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.common:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:JvmKit:1.0.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains:annotations:17.0.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_common:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_9_r2:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_10_r1:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_11_r1:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_12_r1:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_13_r1:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_13_r2:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: dev.anhcraft:craftkit.cb_1_14_r1:1.0.5" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:acf-paper:0.5.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:acf-bukkit:0.5.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:acf-core:0.5.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:Table:1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:DelegatingMap:1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:locales:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.jodah:expiringmap:0.5.8" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:minecraft-timings:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: dev.anhcraft:abif:1.0.5" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: me.angeschossen:lands:3.9.6.5">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/Lands.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

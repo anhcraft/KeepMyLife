@@ -3,6 +3,7 @@ version: ${project.version}
 main: dev.anhcraft.keepmylife.KeepMyLife
 authors: [anhcraft]
 depend: [CraftKit]
+softdepend: [Lands]
 description: ${project.description}
 website: https://anhcraft.dev/
 api-version: "1.13"

@@ -6,6 +6,7 @@ import dev.anhcraft.craftkit.kits.chat.Chat;
 import dev.anhcraft.keepmylife.KeepMyLife;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandAlias("kml|keepmylife")
 public class RootCmd extends BaseCommand {
@@ -26,7 +27,7 @@ public class RootCmd extends BaseCommand {
     @Subcommand("soulgem give")
     @CommandPermission("kml.soulgem.give")
     public void soulgem(CommandSender sender, @Flags("loose") String playerName){
-        var player = Bukkit.getPlayer(playerName);
+        Player player = Bukkit.getPlayer(playerName);
         if(player == null) instance.chat.message(sender, playerName+" &cis not online!");
         else {
             player.getInventory().addItem(instance.getSoulGem()); // we do not need to update the inventory here

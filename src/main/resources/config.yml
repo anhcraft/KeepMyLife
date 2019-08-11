@@ -16,7 +16,7 @@ check_update: true
 # Configuration for soul gem
 soul_gem:
   # This section uses ABIF (anhcraft's bukkit item format)
-  # Reference: https://github.com/anhcraft/ABIF/blob/master/README.md
+  # Reference: https://github.com/anhcraft/ABIF/blob/ed5ddf4f1ebed2d3538cff8532d0ed6f69915b48/README.md
   item:
     material: EMERALD
     name: "&6&lSoul &a&lGem"
@@ -31,6 +31,7 @@ soul_gem:
   # Do not change this if your players have already used the soul gems
   nbt_tag: "kml_soul_gem"
 
+  # Recipe to craft the soul gem
   recipe:
     enable: false
     shape:
@@ -48,7 +49,7 @@ soul_gem:
 
   # Commands to be executed after using the game
   commands_on_use:
-    - "give %s apple 1"
+    - "give {player} apple 1"
 
 
 # Configuration for world groups
@@ -66,7 +67,7 @@ world_groups:
         from: 0
         to: 12516 # in Minecraft ticks
         keep_item: true # keep items
-        keep_level: true # keep player level
+        keep_exp: true # keep players exp
         sound: "entity_firework_twinkle" # case-insensitive | for 1.13+: ENTITY_FIREWORK_ROCKET_TWINKLE
         broadcast:
           # these messages will appear on players chat box
@@ -77,7 +78,7 @@ world_groups:
         from: 12516
         to: 24000
         keep_item: false
-        keep_level: true
+        keep_exp: true
         sound: "ENTITY_ENDERDRAGON_AMBIENT" # for 1.13+: ENTITY_ENDER_DRAGON_AMBIENT
         broadcast:
           chat:
@@ -95,3 +96,14 @@ world_groups:
         from: 0
         to: 24000
         keep_item: true # <-- always keep xD
+
+  # Third group
+  group3:
+    worlds:
+      - _survival_
+
+    # Lands integration (4 settings below are set to false by default)
+    keep_items_on_invited_landchunks: true # Players whose items drop in their invited land chunk can get their items kept
+    keep_items_on_owned_landchunks: true # Like above but the player must own the land chunk
+    keep_exp_on_invited_landchunks: true # Players who lost their exp in their invited land chunk can get their exp kept
+    keep_exp_on_owned_landchunks: true # Like above but the player must own the land chunk

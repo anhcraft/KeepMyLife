@@ -12,7 +12,7 @@ public class TimeKeep {
     private long from;
     private long to;
     private boolean keepItem;
-    private boolean keepLevel;
+    private boolean keepExp;
     private Sound sound;
     private String actionBarBroadcast;
     private WorldGroup worldGroup;
@@ -52,12 +52,12 @@ public class TimeKeep {
         this.keepItem = keepItem;
     }
 
-    public boolean isKeepLevel() {
-        return keepLevel;
+    public boolean isKeepExp() {
+        return keepExp;
     }
 
-    public void setKeepLevel(boolean keepLevel) {
-        this.keepLevel = keepLevel;
+    public void setKeepExp(boolean keepExp) {
+        this.keepExp = keepExp;
     }
 
     public Sound getSound() {
@@ -84,7 +84,7 @@ public class TimeKeep {
         return from == timeKeep.from &&
                 to == timeKeep.to &&
                 keepItem == timeKeep.keepItem &&
-                keepLevel == timeKeep.keepLevel &&
+                keepExp == timeKeep.keepExp &&
                 chatBroadcast.equals(timeKeep.chatBroadcast) &&
                 id.equals(timeKeep.id) &&
                 sound == timeKeep.sound &&
