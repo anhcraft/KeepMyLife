@@ -1,4 +1,4 @@
-package dev.anhcraft.keepmylife.integrations.lands;
+package dev.anhcraft.keepmylife.integrations;
 
 import dev.anhcraft.jvmkit.utils.Pair;
 import dev.anhcraft.keepmylife.KeepMyLife;
@@ -6,11 +6,11 @@ import me.angeschossen.lands.api.landsaddons.LandsAddon;
 import me.angeschossen.lands.api.objects.LandChunk;
 import org.bukkit.entity.Player;
 
-public class KMLAddon {
+public class KMLLandAddon {
     private final LandsAddon addon;
     private final String key;
 
-    public KMLAddon(KeepMyLife plugin) {
+    public KMLLandAddon(KeepMyLife plugin) {
         addon = new LandsAddon(plugin, true);
         key = addon.initialize();
     }

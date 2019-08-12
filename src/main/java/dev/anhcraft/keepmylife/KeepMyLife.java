@@ -1,8 +1,6 @@
 package dev.anhcraft.keepmylife;
 
 import co.aikar.commands.PaperCommandManager;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import dev.anhcraft.abif.ABIF;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.CompoundTag;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.LongTag;
@@ -25,7 +23,7 @@ import dev.anhcraft.keepmylife.api.WorldGroup;
 import dev.anhcraft.keepmylife.api.events.KeepItemEvent;
 import dev.anhcraft.keepmylife.api.events.SoulGemUseEvent;
 import dev.anhcraft.keepmylife.cmd.RootCmd;
-import dev.anhcraft.keepmylife.integrations.lands.KMLAddon;
+import dev.anhcraft.keepmylife.integrations.KMLLandAddon;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -55,7 +53,7 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
     private ItemStack soulGem;
     private ShapedRecipe currentRecipe;
     private static KMLApi api;
-    private Optional<KMLAddon> landAddon;
+    private Optional<KMLLandAddon> landAddon;
 
     public static KMLApi getApi() {
         return api;
@@ -135,7 +133,7 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
 
         getServer().getPluginManager().registerEvents(this, this);
 
-        landAddon = Optional.ofNullable(getServer().getPluginManager().isPluginEnabled("Lands") ? new KMLAddon(this) : null);
+        landAddon = Optional.ofNullable(getServer().getPluginManager().isPluginEnabled("Lands") ? new KMLLandAddon(this) : null);
 
         if(CONF.getBoolean("check_update")){
             task.newDelayedAsyncTask(() -> {
@@ -214,7 +212,7 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
         }
 
         if(landAddon.isPresent()){
-            KMLAddon a = landAddon.get();
+            KMLLandAddon a = landAddon.get();
             Pair<Boolean, Boolean> x = a.isOnOwnLandChunk(p);
             if(wg.isKeepItemOnOwnedLandChunk() && x.getFirst())
                 keepItem = true;
