@@ -260,7 +260,9 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
                 } else if(hasSoulGem) keptItems.add(item);
                 else tempItems.add(item); // do not remove item directly, we do not know if the inventory has a soul gem
             }
-            dropItems.addAll(tempItems);
+            if (!hasSoulGem) {
+                dropItems.addAll(tempItems);
+            }
         } else {
             dropItems.addAll(ArrayUtil.toList(p.getInventory().getContents()));
         }
