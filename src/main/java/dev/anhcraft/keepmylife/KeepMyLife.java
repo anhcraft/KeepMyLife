@@ -208,8 +208,8 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
         WorldGroup wg = WG.get(p.getWorld().getName());
         if(wg == null) return;
         // we will keep if either the player has specified permissions or he is on a safe world
-        boolean keepItem = p.hasPermission("kml.keep.item");
-        boolean keepExp = p.hasPermission("kml.keep.exp");
+        boolean keepItem = event.getKeepInventory();
+        boolean keepExp = event.getKeepLevel();
         boolean soulGem = wg.isAllowSoulGem();
         TimeKeep tk = TK.get(p.getWorld());
         if(tk != null){
@@ -239,6 +239,9 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
             if(flags[1] != null) keepExp = flags[1];
             if(flags[2] != null) soulGem = flags[2];
         }
+
+        if (p.hasPermission("kml.keep.item")) keepItem = true;
+        if (p.hasPermission("kml.keep.exp")) keepExp = true;
 
         event.setKeepInventory(true);
         event.getDrops().clear(); // 1.14.4 fix
