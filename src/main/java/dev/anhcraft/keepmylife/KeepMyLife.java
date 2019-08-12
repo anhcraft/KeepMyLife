@@ -24,6 +24,7 @@ import dev.anhcraft.keepmylife.api.events.KeepItemEvent;
 import dev.anhcraft.keepmylife.api.events.SoulGemUseEvent;
 import dev.anhcraft.keepmylife.cmd.RootCmd;
 import dev.anhcraft.keepmylife.integrations.KMLLandAddon;
+import dev.anhcraft.keepmylife.integrations.WGFlags;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -54,6 +55,7 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
     private ShapedRecipe currentRecipe;
     private static KMLApi api;
     private Optional<KMLLandAddon> landAddon;
+    private Optional<WGFlags> wgFlags;
 
     public static KMLApi getApi() {
         return api;
@@ -121,6 +123,11 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
             }
             RecipeUtil.register(currentRecipe);
         }
+    }
+
+    @Override
+    public void onLoad(){
+        wgFlags = Optional.ofNullable(getServer().getPluginManager().getPlugin("WorldGuard") != null ? new WGFlags() : null);
     }
 
     @Override
@@ -223,6 +230,14 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
                 keepExp = true;
             else if(wg.isKeepExpOnInvitedLandChunk() && (x.getFirst() || x.getSecond()))
                 keepExp = true;
+        }
+
+        if(wgFlags.isPresent()) {
+            WGFlags a = wgFlags.get();
+            Boolean[] flags = a.getFlagState(p.getLocation());
+            if(flags[0] != null) keepItem = flags[0];
+            if(flags[1] != null) keepExp = flags[1];
+            if(flags[2] != null) soulGem = flags[2];
         }
 
         event.setKeepInventory(true);
