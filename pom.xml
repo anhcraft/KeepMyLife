@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>keepmylife</artifactId>
-    <version>1.4.5</version>
+    <version>1.4.6</version>
     <packaging>jar</packaging>
 
     <name>KeepMyLife</name>
@@ -62,6 +62,12 @@
                 <configuration>
                     <finalName>${project.name}</finalName>
                     <minimizeJar>false</minimizeJar>
+                    <relocations>
+                        <relocation>
+                            <pattern>co.aikar.commands</pattern>
+                            <shadedPattern>dev.anhcraft.craftkit.acf</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
                 <executions>
                     <execution>
@@ -113,7 +119,7 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
