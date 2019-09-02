@@ -16,7 +16,7 @@ check_update: true
 # Configuration for soul gem
 soul_gem:
   # This section uses ABIF (anhcraft's bukkit item format)
-  # Reference: https://github.com/anhcraft/ABIF/blob/ed5ddf4f1ebed2d3538cff8532d0ed6f69915b48/README.md
+  # Reference: https://github.com/anhcraft/ABIF/blob/master/README.md
   item:
     material: EMERALD
     name: "&6&lSoul &a&lGem"

@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>keepmylife</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.7</version>
     <packaging>jar</packaging>
 
     <name>KeepMyLife</name>
@@ -119,14 +119,8 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.8</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>dev.anhcraft</groupId>
-            <artifactId>abif</artifactId>
-            <version>1.0.5</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.angeschossen</groupId>

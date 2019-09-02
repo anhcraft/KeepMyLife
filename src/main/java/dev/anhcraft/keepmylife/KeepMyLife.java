@@ -1,13 +1,13 @@
 package dev.anhcraft.keepmylife;
 
 import co.aikar.commands.PaperCommandManager;
-import dev.anhcraft.abif.ABIF;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.CompoundTag;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.LongTag;
 import dev.anhcraft.craftkit.cb_common.lang.enumeration.NMSVersion;
 import dev.anhcraft.craftkit.common.utils.ChatUtil;
 import dev.anhcraft.craftkit.common.utils.SpigetApiUtil;
 import dev.anhcraft.craftkit.helpers.TaskHelper;
+import dev.anhcraft.craftkit.kits.abif.ABIF;
 import dev.anhcraft.craftkit.kits.chat.ActionBar;
 import dev.anhcraft.craftkit.kits.chat.Chat;
 import dev.anhcraft.craftkit.utils.ItemUtil;
@@ -73,7 +73,7 @@ public final class KeepMyLife extends JavaPlugin implements KMLApi, Listener {
 
         chat = new Chat(CONF.getString("message_prefix"));
 
-        soulGem = ABIF.load(CONF.getConfigurationSection("soul_gem.item"));
+        soulGem = ABIF.read(CONF.getConfigurationSection("soul_gem.item")).build();
         CompoundTag compound = CompoundTag.of(soulGem);
         CompoundTag tag = (CompoundTag) compound.get("tag");
         if(tag == null) tag = new CompoundTag();
