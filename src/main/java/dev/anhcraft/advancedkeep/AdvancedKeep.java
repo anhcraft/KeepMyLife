@@ -9,7 +9,7 @@ import dev.anhcraft.advancedkeep.api.WorldGroup;
 import dev.anhcraft.advancedkeep.api.events.PlayerKeepEvent;
 import dev.anhcraft.advancedkeep.api.events.SoulGemUseEvent;
 import dev.anhcraft.advancedkeep.cmd.AdminCmd;
-import dev.anhcraft.advancedkeep.integrations.KMLLandAddon;
+import dev.anhcraft.advancedkeep.integrations.LandAddon;
 import dev.anhcraft.advancedkeep.integrations.WGFlags;
 import dev.anhcraft.craftkit.cb_common.kits.nbt.CompoundTag;
 import dev.anhcraft.craftkit.cb_common.lang.enumeration.NMSVersion;
@@ -58,7 +58,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     public Chat chat;
     private ItemStack soulGem;
     private ShapedRecipe currentRecipe;
-    private KMLLandAddon landAddon;
+    private LandAddon landAddon;
     private WGFlags wgFlags;
     private boolean needUpdatePlugin;
     private boolean needUpdateDeathChestConf;
@@ -173,7 +173,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         initConf();
 
         if(getServer().getPluginManager().isPluginEnabled("Lands"))
-            landAddon = new KMLLandAddon(this);
+            landAddon = new LandAddon(this);
 
         if(CONF.getBoolean("check_update")){
             task.newDelayedAsyncTask(() -> {

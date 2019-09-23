@@ -8,9 +8,9 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import org.bukkit.Location;
 
 public class WGFlags {
-    public StateFlag KEEP_ITEM_FLAG = new StateFlag("kml-keep-item", false);
-    public StateFlag KEEP_EXP_FLAG = new StateFlag("kml-keep-exp", false);
-    public StateFlag USE_SOUL_GEM_FLAG = new StateFlag("kml-use-soul-gem", false);
+    public StateFlag KEEP_ITEM_FLAG = new StateFlag("keep-item", false);
+    public StateFlag KEEP_EXP_FLAG = new StateFlag("keep-exp", false);
+    public StateFlag USE_SOUL_GEM_FLAG = new StateFlag("allow-use-soul-gem", false);
 
     public WGFlags(){
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();

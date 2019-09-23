@@ -6,11 +6,11 @@ import me.angeschossen.lands.api.landsaddons.LandsAddon;
 import me.angeschossen.lands.api.objects.LandChunk;
 import org.bukkit.entity.Player;
 
-public class KMLLandAddon {
+public class LandAddon {
     private final LandsAddon addon;
     private final String key;
 
-    public KMLLandAddon(AdvancedKeep plugin) {
+    public LandAddon(AdvancedKeep plugin) {
         addon = new LandsAddon(plugin, true);
         key = addon.initialize();
     }
