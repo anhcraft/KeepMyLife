@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.anhcraft</groupId>
-    <artifactId>keepmylife</artifactId>
-    <version>1.4.7</version>
+    <artifactId>advancedkeep</artifactId>
+    <version>1.4.8</version>
     <packaging>jar</packaging>
 
-    <name>KeepMyLife</name>
+    <name>AdvancedKeep</name>
 
-    <description>Advanced plugin for keeping players inventory</description>
+    <description>Advanced plugin for keeping players items and exp</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -60,7 +60,7 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
-                    <finalName>${project.name}</finalName>
+                    <finalName>${project.artifactId}</finalName>
                     <minimizeJar>false</minimizeJar>
                     <relocations>
                         <relocation>
@@ -119,13 +119,13 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.0.8</version>
+            <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.angeschossen</groupId>
             <artifactId>lands</artifactId>
-            <version>3.9.6.5</version>
+            <version>4.1.0.0</version>
             <systemPath>${basedir}/lib/Lands.jar</systemPath>
             <scope>system</scope>
         </dependency>

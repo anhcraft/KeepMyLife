@@ -1,6 +1,6 @@
-name: KeepMyLife
+name: AdvancedKeep
 version: ${project.version}
-main: dev.anhcraft.keepmylife.KeepMyLife
+main: dev.anhcraft.advancedkeep.AdvancedKeep
 authors: [anhcraft]
 depend: [CraftKit]
 softdepend: [WorldEdit,WorldGuard,Lands]

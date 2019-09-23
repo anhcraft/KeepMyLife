@@ -1,4 +1,4 @@
-package dev.anhcraft.keepmylife.integrations;
+package dev.anhcraft.advancedkeep.integrations;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
