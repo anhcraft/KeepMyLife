@@ -11,15 +11,15 @@ import dev.anhcraft.advancedkeep.api.events.SoulGemUseEvent;
 import dev.anhcraft.advancedkeep.cmd.AdminCmd;
 import dev.anhcraft.advancedkeep.integrations.LandAddon;
 import dev.anhcraft.advancedkeep.integrations.WGFlags;
-import dev.anhcraft.craftkit.cb_common.kits.nbt.CompoundTag;
-import dev.anhcraft.craftkit.cb_common.lang.enumeration.NMSVersion;
+import dev.anhcraft.craftkit.abif.ABIF;
+import dev.anhcraft.craftkit.cb_common.NMSVersion;
+import dev.anhcraft.craftkit.cb_common.nbt.CompoundTag;
+import dev.anhcraft.craftkit.chat.ActionBar;
+import dev.anhcraft.craftkit.chat.Chat;
 import dev.anhcraft.craftkit.common.utils.ChatUtil;
 import dev.anhcraft.craftkit.common.utils.SpigotApiUtil;
 import dev.anhcraft.craftkit.helpers.ItemNBTHelper;
 import dev.anhcraft.craftkit.helpers.TaskHelper;
-import dev.anhcraft.craftkit.kits.abif.ABIF;
-import dev.anhcraft.craftkit.kits.chat.ActionBar;
-import dev.anhcraft.craftkit.kits.chat.Chat;
 import dev.anhcraft.craftkit.utils.ItemUtil;
 import dev.anhcraft.craftkit.utils.MaterialUtil;
 import dev.anhcraft.craftkit.utils.RecipeUtil;
@@ -63,6 +63,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     private boolean needUpdatePlugin;
     private boolean needUpdateDeathChestConf;
     private TaskHelper task;
+    private Particle particle;
 
     private int hashBlockLocation(Location location){
         return Objects.hash(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -220,7 +221,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                     int my = Math.min(loc.getWorld().getMaxHeight(), y + 25);
                     while (y < my){
                         loc.setY(y++);
-                        loc.getWorld().spawnParticle(Particle.TOTEM, loc, 1, 0, 0, 0, 0, null);
+                        loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 1, 0, 0, 0, 0, null);
                     }
                 }
             });

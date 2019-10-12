@@ -6,16 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="AdvancedKeep" />
+        <module name="advancedkeep" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="AdvancedKeep" target="1.8" />
-    </bytecodeTargetLevel>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="AdvancedKeep" options="" />
-    </option>
   </component>
 </project>

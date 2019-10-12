@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>advancedkeep</artifactId>
-    <version>1.4.8</version>
+    <version>1.4.9</version>
     <packaging>jar</packaging>
 
     <name>AdvancedKeep</name>
@@ -67,6 +67,10 @@
                             <pattern>co.aikar.commands</pattern>
                             <shadedPattern>dev.anhcraft.craftkit.acf</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>dev.anhcraft.confighelper</pattern>
+                            <shadedPattern>dev.anhcraft.craftkit.helpers.config</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -119,7 +123,7 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
