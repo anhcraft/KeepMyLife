@@ -2,16 +2,16 @@ package dev.anhcraft.advancedkeep.integrations;
 
 import dev.anhcraft.advancedkeep.AdvancedKeep;
 import dev.anhcraft.jvmkit.utils.Pair;
-import me.angeschossen.lands.api.landsaddons.LandsAddon;
-import me.angeschossen.lands.api.objects.LandChunk;
+import me.angeschossen.lands.api.integration.LandsIntegration;
+import me.angeschossen.lands.api.land.LandChunk;
 import org.bukkit.entity.Player;
 
 public class LandAddon {
-    private final LandsAddon addon;
+    private final LandsIntegration addon;
     private final String key;
 
     public LandAddon(AdvancedKeep plugin) {
-        addon = new LandsAddon(plugin, true);
+        addon = new LandsIntegration(plugin, false);
         key = addon.initialize();
     }
 
