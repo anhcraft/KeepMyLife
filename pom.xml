@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>advancedkeep</artifactId>
-    <version>1.4.9</version>
+    <version>1.5.0</version>
     <packaging>jar</packaging>
 
     <name>AdvancedKeep</name>
@@ -104,6 +104,10 @@
             <id>sk89q-repo</id>
             <url>https://maven.sk89q.com/repo/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
@@ -121,17 +125,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>dev.anhcraft</groupId>
-            <artifactId>craftkit.spigot</artifactId>
-            <version>1.1.1</version>
+            <groupId>com.github.Angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>4.3.3.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.angeschossen</groupId>
-            <artifactId>lands</artifactId>
-            <version>4.1.0.0</version>
-            <systemPath>${basedir}/lib/Lands.jar</systemPath>
-            <scope>system</scope>
+            <groupId>dev.anhcraft</groupId>
+            <artifactId>craftkit.spigot</artifactId>
+            <version>1.1.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>

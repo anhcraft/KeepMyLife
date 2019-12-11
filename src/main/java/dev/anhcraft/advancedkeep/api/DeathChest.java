@@ -47,7 +47,7 @@ public class DeathChest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeathChest that = (DeathChest) o;
-        return id == that.id &&
+        return id.equals(that.id) &&
                 date == that.date &&
                 owner.equals(that.owner) &&
                 location.equals(that.location);
