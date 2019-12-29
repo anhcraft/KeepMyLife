@@ -33,6 +33,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -63,7 +66,6 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     private boolean needUpdatePlugin;
     private boolean needUpdateDeathChestConf;
     private TaskHelper task;
-    private Particle particle;
 
     private int hashBlockLocation(Location location){
         return Objects.hash(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -292,8 +294,9 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
     @EventHandler
     public void join(PlayerJoinEvent event){
-        if(needUpdatePlugin && event.getPlayer().hasPermission("keep.update"))
+        if(needUpdatePlugin && event.getPlayer().hasPermission("keep.update")) {
             chat.message(event.getPlayer(), "&cThis plugin is outdated! Please update it <3");
+        }
     }
 
     @EventHandler
@@ -309,6 +312,36 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 }
                 DC.remove(x);
                 needUpdateDeathChestConf = true;
+            }
+        }
+    }
+
+    @EventHandler
+    public void blockBreak(BlockBreakEvent event){
+        int h = hashBlockLocation(event.getBlock().getLocation());
+        if(DC.containsKey(h)) {
+            event.setDropItems(false);
+        }
+    }
+
+    @EventHandler
+    public void explode(EntityExplodeEvent event){
+        for (Iterator<Block> it = event.blockList().iterator(); it.hasNext(); ) {
+            Block b = it.next();
+            int h = hashBlockLocation(b.getLocation());
+            if(DC.containsKey(h)) {
+                it.remove();
+            }
+        }
+    }
+
+    @EventHandler
+    public void explode(BlockExplodeEvent event){
+        for (Iterator<Block> it = event.blockList().iterator(); it.hasNext(); ) {
+            Block b = it.next();
+            int h = hashBlockLocation(b.getLocation());
+            if(DC.containsKey(h)) {
+                it.remove();
             }
         }
     }
@@ -333,7 +366,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             deathChest = tk.isEnableDeathChest();
 
             if(landAddon != null){
-                Pair<Boolean, Boolean> x = landAddon.isOnOwnLandChunk(p);
+                PresentPair<Boolean, Boolean> x = landAddon.isOnOwnLandChunk(p);
                 if(tk.isKeepItemOnOwnedLandChunk() && x.getFirst())
                     keepItem = true;
                 else if(tk.isKeepItemOnInvitedLandChunk() && (x.getFirst() || x.getSecond()))

@@ -1,7 +1,7 @@
 package dev.anhcraft.advancedkeep.integrations;
 
 import dev.anhcraft.advancedkeep.AdvancedKeep;
-import dev.anhcraft.jvmkit.utils.Pair;
+import dev.anhcraft.jvmkit.utils.PresentPair;
 import me.angeschossen.lands.api.integration.LandsIntegration;
 import me.angeschossen.lands.api.land.LandChunk;
 import org.bukkit.entity.Player;
@@ -15,10 +15,10 @@ public class LandAddon {
         key = addon.initialize();
     }
 
-    public Pair<Boolean, Boolean> isOnOwnLandChunk(Player p){
+    public PresentPair<Boolean, Boolean> isOnOwnLandChunk(Player p){
         LandChunk lc = addon.getLandChunk(p.getLocation());
-        if(lc == null) return new Pair<>(false, false);
-        return new Pair<>(lc.getOwnerUID().equals(p.getUniqueId()), lc.isTrusted(p.getUniqueId()));
+        if(lc == null) return new PresentPair<>(false, false);
+        return new PresentPair<>(lc.getOwnerUID().equals(p.getUniqueId()), lc.isTrusted(p.getUniqueId()));
     }
 
     public void disable() {
