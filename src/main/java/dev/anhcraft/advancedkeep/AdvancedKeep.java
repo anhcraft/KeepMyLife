@@ -57,7 +57,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     private final YamlConfiguration CONF = new YamlConfiguration();
     private final Map<String, WorldGroup> WG = new ConcurrentHashMap<>();
     private final Map<World, TimeKeep> TK = new ConcurrentHashMap<>();
-    private final Map<Integer, DeathChest> DC = new ConcurrentHashMap<>();
+    public final Map<Integer, DeathChest> DC = new ConcurrentHashMap<>();
     private final YamlConfiguration DC_CONF = new YamlConfiguration();
     public Chat chat;
     private ItemStack soulGem;
@@ -224,7 +224,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             });
 
             DC.forEach((location, deathChest) -> {
-                if(deathChest.getLocation().getBlock().getType() != Material.CHEST) {
+                if(deathChest.getLocation().getBlock().getType() != deathChestMaterial) {
                     DC.remove(location);
                     needUpdateDeathChestConf = true;
                 } else if(CONF.getBoolean("death_chest.signal_effect")) {
@@ -317,13 +317,8 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             Block b = event.getClickedBlock();
             int x = hashBlockLocation(b.getLocation());
             DeathChest dc = DC.get(x);
-            if(dc != null){
-                if(CONF.getBoolean("death_chest.lock_death_chest") && !event.getPlayer().getUniqueId().equals(dc.getOwner())) {
-                    event.setCancelled(true);
-                    return;
-                }
-                DC.remove(x);
-                needUpdateDeathChestConf = true;
+            if(dc != null && CONF.getBoolean("death_chest.lock_death_chest") && !event.getPlayer().getUniqueId().equals(dc.getOwner())) {
+                event.setCancelled(true);
             }
         }
     }
