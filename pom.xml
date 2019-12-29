@@ -70,6 +70,10 @@
                         <relocation>
                             <pattern>dev.anhcraft.confighelper</pattern>
                             <shadedPattern>dev.anhcraft.craftkit.helpers.config</shadedPattern>
+                        </relocation>>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>dev.anhcraft.advancedkeep.bstats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -108,6 +112,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
@@ -141,6 +149,12 @@
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.5</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

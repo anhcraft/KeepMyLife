@@ -24,6 +24,7 @@ import dev.anhcraft.craftkit.utils.ItemUtil;
 import dev.anhcraft.craftkit.utils.MaterialUtil;
 import dev.anhcraft.craftkit.utils.RecipeUtil;
 import dev.anhcraft.jvmkit.utils.*;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -246,6 +247,8 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 }
             }
         }, 0, 20);
+
+        new Metrics(this);
     }
 
     @NotNull
