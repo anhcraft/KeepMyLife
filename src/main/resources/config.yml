@@ -63,6 +63,10 @@ death_chest:
   # The signal is useful for players to find the chest
   signal_effect: true
 
+  # The material of the death chest
+  # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+  material: chest
+
 
 # Configuration for world groups
 world_groups:

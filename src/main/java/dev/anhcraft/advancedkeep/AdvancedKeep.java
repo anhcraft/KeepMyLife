@@ -67,6 +67,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     private boolean needUpdatePlugin;
     private boolean needUpdateDeathChestConf;
     private TaskHelper task;
+    private Material deathChestMaterial;
 
     private int hashBlockLocation(Location location){
         return Objects.hash(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -157,12 +158,20 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             long date = cs.getLong("date");
             DC.put(hashBlockLocation(location), new DeathChest(s, owner, location, date));
         }
+
+        String s = CONF.getString("death_chest.material");
+        if(s == null) deathChestMaterial = Material.CHEST;
+        else {
+            Material mt = (Material) EnumUtil.findEnum(Material.class, s);
+            deathChestMaterial = mt == null ? Material.CHEST : mt;
+        }
     }
 
     @Override
     public void onLoad(){
-        if(getServer().getPluginManager().getPlugin("WorldGuard") != null)
+        if(getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             wgFlags = new WGFlags();
+        }
     }
 
     @Override
@@ -443,8 +452,9 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         if(!ev.getDropItems().isEmpty()){
             if(deathChest) {
                 Block b = location.getBlock();
-                if (b.getType() != Material.CHEST)
-                    b.setType(Material.CHEST);
+                if (b.getType() != deathChestMaterial) {
+                    b.setType(deathChestMaterial);
+                }
                 DC.compute(hashBlockLocation(location), (loc, dc) -> {
                     if(dc == null)
                         return new DeathChest(new String(RandomUtil.randomLetters(10)), p.getUniqueId(), b.getLocation(), System.currentTimeMillis());
