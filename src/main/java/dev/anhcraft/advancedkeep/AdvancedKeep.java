@@ -11,7 +11,10 @@ import dev.anhcraft.advancedkeep.api.events.SoulGemUseEvent;
 import dev.anhcraft.advancedkeep.cmd.AdminCmd;
 import dev.anhcraft.advancedkeep.integrations.LandAddon;
 import dev.anhcraft.advancedkeep.integrations.WGFlags;
+import dev.anhcraft.confighelper.ConfigHelper;
+import dev.anhcraft.confighelper.exception.InvalidValueException;
 import dev.anhcraft.craftkit.abif.ABIF;
+import dev.anhcraft.craftkit.abif.PreparedItem;
 import dev.anhcraft.craftkit.cb_common.NMSVersion;
 import dev.anhcraft.craftkit.cb_common.nbt.CompoundTag;
 import dev.anhcraft.craftkit.chat.ActionBar;
@@ -96,7 +99,11 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
         chat = new Chat(CONF.getString("message_prefix"));
 
-        soulGem = ABIF.read(CONF.getConfigurationSection("soul_gem.item")).build();
+        try {
+            soulGem = ConfigHelper.readConfig(CONF.getConfigurationSection("soul_gem.item"), PreparedItem.SCHEMA).build();
+        } catch (InvalidValueException e) {
+            e.printStackTrace();
+        }
         ItemNBTHelper helper = ItemNBTHelper.of(soulGem);
         helper.getTag().put(CONF.getString("soul_gem.nbt_tag"), System.currentTimeMillis());
         soulGem = helper.save();
