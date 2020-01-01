@@ -63,7 +63,7 @@ public class AdminCmd extends BaseCommand {
 
     @Subcommand("deathchest list")
     @CommandPermission("keep.deathchest.list")
-    @Description("List all deathchest ")
+    @Description("List all death chest of someone")
     public void listDeathChest(CommandSender sender, OfflinePlayer target){
         boolean b = false;
         for (DeathChest dc : instance.DC.values()){
