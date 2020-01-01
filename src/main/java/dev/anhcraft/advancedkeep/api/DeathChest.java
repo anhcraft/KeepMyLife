@@ -2,18 +2,20 @@ package dev.anhcraft.advancedkeep.api;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class DeathChest {
     private String id;
     private UUID owner;
     private Location location;
     private long date;
+    private List<ItemStack> items;
 
-    public DeathChest(@NotNull String id, @NotNull UUID owner, @NotNull Location location, long date) {
+    public DeathChest(@NotNull String id, @NotNull UUID owner, @NotNull Location location, long date, @Nullable List<ItemStack> items) {
         Preconditions.checkNotNull(id);
         Preconditions.checkNotNull(owner);
         Preconditions.checkNotNull(location);
@@ -21,6 +23,7 @@ public class DeathChest {
         this.owner = owner;
         this.location = location;
         this.date = date;
+        this.items = items;
     }
 
     @NotNull
@@ -42,6 +45,15 @@ public class DeathChest {
         return date;
     }
 
+    @Nullable
+    public List<ItemStack> getItems() {
+        return items;
+    }
+
+    public void setItems(@Nullable List<ItemStack> items) {
+        this.items = items;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,7 +62,8 @@ public class DeathChest {
         return id.equals(that.id) &&
                 date == that.date &&
                 owner.equals(that.owner) &&
-                location.equals(that.location);
+                location.equals(that.location) &&
+                Objects.equals(items, that.items);
     }
 
     @Override

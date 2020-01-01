@@ -33,6 +33,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
@@ -156,7 +157,29 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             Location location = (Location) cs.get("location");
             UUID owner = new UUID(cs.getLong("owner.msb"), cs.getLong("owner.lsb"));
             long date = cs.getLong("date");
-            DC.put(hashBlockLocation(location), new DeathChest(s, owner, location, date));
+            List<ItemStack> items = (List<ItemStack>) cs.getList("items");
+            Block b = location.getBlock();
+            if(b.getType() != deathChestMaterial || !(b.getState() instanceof Chest)){
+                getLogger().info(String.format("Invalid death chest at %s %s %s", b.getX(), b.getY(), b.getZ()));
+                if(items != null){
+                    for (ItemStack item : items){
+                        location.getWorld().dropItemNaturally(location, item);
+                    }
+                }
+                continue;
+            }
+            if(items == null){
+                Inventory inv = ((Chest) b.getState()).getBlockInventory();
+                items = new ArrayList<>();
+                for (ItemStack item : inv) {
+                    if(ItemUtil.isNull(item)) continue;
+                    items.add(item);
+                }
+                inv.clear();
+                b.getState().update(true);
+                needUpdateDeathChestConf = true;
+            }
+            DC.put(hashBlockLocation(location), new DeathChest(s, owner, location, date, items));
         }
 
         String s = CONF.getString("death_chest.material");
@@ -223,12 +246,20 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 }
             });
 
-            DC.forEach((location, deathChest) -> {
-                if(deathChest.getLocation().getBlock().getType() != deathChestMaterial) {
-                    DC.remove(location);
+            DC.forEach((id, dc) -> {
+                if(dc.getLocation().getBlock().getType() != deathChestMaterial) {
+                    Location l = dc.getLocation();
+                    DC.remove(id);
+                    if(dc.getItems() != null){
+                        task.newTask(() -> {
+                            for (ItemStack item : dc.getItems()){
+                                l.getWorld().dropItemNaturally(l, item);
+                            }
+                        });
+                    }
                     needUpdateDeathChestConf = true;
                 } else if(CONF.getBoolean("death_chest.signal_effect")) {
-                    Location loc = deathChest.getLocation().clone();
+                    Location loc = dc.getLocation().clone();
                     int y = loc.getBlockY();
                     int my = Math.min(loc.getWorld().getMaxHeight(), y + 25);
                     while (y < my){
@@ -241,13 +272,14 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             if(needUpdateDeathChestConf){
                 needUpdateDeathChestConf = false;
                 DC_CONF.getKeys(false).forEach(s -> DC_CONF.set(s, null));
-                DC.forEach((location, deathChest) -> {
+                DC.forEach((id, dc) -> {
                     ConfigurationSection c = new YamlConfiguration();
-                    c.set("owner.lsb", deathChest.getOwner().getLeastSignificantBits());
-                    c.set("owner.msb", deathChest.getOwner().getMostSignificantBits());
-                    c.set("location", deathChest.getLocation());
-                    c.set("date", deathChest.getDate());
-                    DC_CONF.set(deathChest.getId(), c);
+                    c.set("owner.lsb", dc.getOwner().getLeastSignificantBits());
+                    c.set("owner.msb", dc.getOwner().getMostSignificantBits());
+                    c.set("location", dc.getLocation());
+                    c.set("date", dc.getDate());
+                    c.set("items", dc.getItems());
+                    DC_CONF.set(dc.getId(), c);
                 });
                 try {
                     DC_CONF.save(new File(getDataFolder(), "death_chests.yml"));
@@ -317,17 +349,14 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             Block b = event.getClickedBlock();
             int x = hashBlockLocation(b.getLocation());
             DeathChest dc = DC.get(x);
-            if(dc != null && CONF.getBoolean("death_chest.lock_death_chest") && !event.getPlayer().getUniqueId().equals(dc.getOwner())) {
-                event.setCancelled(true);
+            if(dc != null) {
+                if(CONF.getBoolean("death_chest.lock_death_chest") && !event.getPlayer().getUniqueId().equals(dc.getOwner())){
+                    event.setCancelled(true);
+                    return;
+                }
+                // set this to air and the main task will drop inner items automatically
+                b.setType(Material.AIR);
             }
-        }
-    }
-
-    @EventHandler
-    public void blockBreak(BlockBreakEvent event){
-        int h = hashBlockLocation(event.getBlock().getLocation());
-        if(DC.containsKey(h)) {
-            event.setDropItems(false);
         }
     }
 
@@ -450,26 +479,44 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 if (b.getType() != deathChestMaterial) {
                     b.setType(deathChestMaterial);
                 }
-                DC.compute(hashBlockLocation(location), (loc, dc) -> {
-                    if(dc == null)
-                        return new DeathChest(new String(RandomUtil.randomLetters(10)), p.getUniqueId(), b.getLocation(), System.currentTimeMillis());
-                    else
-                        return new DeathChest(dc.getId(), p.getUniqueId(), dc.getLocation(), System.currentTimeMillis());
+                DeathChest chest = DC.compute(hashBlockLocation(location), (id, dc) -> {
+                    if(dc == null) {
+                        return new DeathChest(
+                                new String(RandomUtil.randomLetters(10)),
+                                p.getUniqueId(),
+                                b.getLocation(),
+                                System.currentTimeMillis(),
+                                new ArrayList<>()
+                        );
+                    }
+                    else {
+                        boolean overridable = CONF.getBoolean("death_chest.merge_chest_on_duplicate");
+                        // override the old death chest!
+                        return new DeathChest(
+                                dc.getId(),
+                                p.getUniqueId(),
+                                dc.getLocation(),
+                                System.currentTimeMillis(),
+                                dc.getItems() == null || !overridable ? null : new ArrayList<>(dc.getItems())
+                        );
+                    }
                 });
                 needUpdateDeathChestConf = true;
-                task.newTask(() -> {
-                    Inventory inv = ((Chest) b.getState()).getBlockInventory();
-                    if (!CONF.getBoolean("death_chest.merge_chest_on_duplicate")) inv.clear();
-                    for (ItemStack itemStack : ev.getDropItems()) {
-                        if (!ItemUtil.isNull(itemStack))
-                            inv.addItem(itemStack);
+                if(!ev.getDropItems().isEmpty()) {
+                    if(chest.getItems() == null){
+                        chest.setItems(new ArrayList<>());
                     }
-                    b.getState().update(true);
-                });
+                    for (ItemStack item : ev.getDropItems()) {
+                        if (!ItemUtil.isNull(item)) {
+                            chest.getItems().add(item);
+                        }
+                    }
+                }
             } else {
-                for (ItemStack itemStack : ev.getDropItems()){
-                    if(!ItemUtil.isNull(itemStack))
-                        p.getWorld().dropItemNaturally(location, itemStack);
+                for (ItemStack item : ev.getDropItems()){
+                    if(!ItemUtil.isNull(item)) {
+                        p.getWorld().dropItemNaturally(location, item);
+                    }
                 }
             }
         }
