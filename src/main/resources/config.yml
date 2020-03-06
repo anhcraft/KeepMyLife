@@ -16,7 +16,7 @@ check_update: true
 soul_gem:
   # The soul gem item
   # Read how to configure the item here:
-  # https://anhcraft.dev/cd/craftkit/PreparedItem.html
+  # https://anhcraft.dev/cd/craftkit/PreparedItem.schema.html
   item:
     material: EMERALD
     name: "&6&lSoul &a&lGem"
@@ -92,11 +92,12 @@ world_groups:
         # Should we keep the items at this duration?
         keep_item: true
 
-        # Should we keep the exp?
+        # Should we keep exp points?
         keep_exp: true
 
         # The sound to be played when this time-keep is activated
-        # 1.14: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+        # 1.15: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+        # 1.14: https://jd.andross.fr/spigot-1.14.4-R0.1-SNAPSHOT/javadoc/org/bukkit/Sound.html
         # 1.13: https://jd.andross.fr/spigot-1.13.2-R0.1-SNAPSHOT/javadoc/org/bukkit/Sound.html
         # 1.12: https://jd.andross.fr/spigot-1.12.2-R0.1-SNAPSHOT/javadoc/org/bukkit/Sound.html
         # 1.11: https://jd.andross.fr/spigot-1.11.2-R0.1-SNAPSHOT/javadoc/org/bukkit/Sound.html
@@ -127,18 +128,52 @@ world_groups:
         # Allow players to use soul gems
         allow_soul_gem: true
 
-        # Lands integration (4 settings below are set to false by default)
-        # Players whose items drop in their invited land chunk can get their items kept
-        keep_items_on_invited_landchunks: true
+        # *** Lands integration ***
+        # (If you don't have Lands, just ignore or remove these settings)
+        # 4 settings below are set to false by default
+        lands:
+          # - You don't lose your items if you are in your own/trusted area
+          keep_items_in_areas: true
 
-        # Like above but the player must own the land chunk
-        keep_items_on_owned_landchunks: true
+          # - You don't lose your items if you are in wilderness
+          keep_items_in_wilderness: false
 
-        # Players who lost their exp in their invited land chunk can get their exp kept
-        keep_exp_on_invited_landchunks: true
+          # - You don't lose your exp points if you are in your own/trusted area
+          keep_exp_in_areas: true
 
-        # Like above but the player must own the land chunk
-        keep_exp_on_owned_landchunks: true
+          # - You don't lose your exp points if you are in wilderness
+          keep_exp_in_wilderness: false
+
+        # *** Towny integration ***
+        # (If you don't have Towny, just ignore or remove these settings)
+        towny:
+          # - You don't lose your items if you are in your own/joined town
+          keep_items_in_town: true
+
+          # - You don't lose your items if you are in wilderness
+          keep_items_in_wilderness: false
+
+          # - You don't lose your exp points if you are in your own/joined town
+          keep_exp_in_town: true
+
+          # - You don't lose your exp points if you are in wilderness
+          keep_exp_in_wilderness: false
+
+        # *** Factions integration ***
+        # Support plugin: SaberFaction
+        # (If you don't have any of those plugins, just ignore or remove these settings)
+        faction:
+          # - You don't lose your items if you are in your own/joined faction
+          keep_items_in_faction: true
+
+          # - You don't lose your items if you are in wilderness
+          keep_items_in_wilderness: false
+
+          # - You don't lose your exp points if you are in your own/joined faction
+          keep_exp_in_faction: true
+
+          # - You don't lose your exp points if you are in wilderness
+          keep_exp_in_wilderness: false
 
   # Second group
   group2:

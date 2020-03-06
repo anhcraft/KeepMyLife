@@ -42,11 +42,11 @@ public class AdminCmd extends BaseCommand {
     public void checkSoulGem(Player p){
         ItemStack i = p.getInventory().getItemInMainHand();
         if(ItemUtil.isNull(i))
-            instance.chat.message(p, "&cPlease hold an item in your hand");
+            instance.chat.message(p, "&cPlease hold an item in your hand.");
         else if(instance.isSoulGem(i))
-            instance.chat.message(p, "&aYup! You are holding a soul gem");
+            instance.chat.message(p, "&aYup! You are holding a soul gem.");
         else
-            instance.chat.message(p, "&eNo :( You are not holding a soul gem");
+            instance.chat.message(p, "&eYou are not holding a soul gem.");
     }
 
     @Subcommand("deathchest teleport")

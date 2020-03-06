@@ -22,10 +22,18 @@ public class TimeKeep {
     private boolean keepExp;
     private boolean enableDeathChest;
     private boolean allowSoulGem;
-    private boolean keepItemOnOwnedLandChunk;
-    private boolean keepItemOnInvitedLandChunk;
-    private boolean keepExpOnOwnedLandChunk;
-    private boolean keepExpOnInvitedLandChunk;
+    private boolean keepExpInArea;
+    private boolean keepItemInArea;
+    private boolean keepExpInLandsWilderness;
+    private boolean keepItemInLandsWilderness;
+    private boolean keepExpInTown;
+    private boolean keepItemInTown;
+    private boolean keepExpInTownyWilderness;
+    private boolean keepItemInTownyWilderness;
+    private boolean keepExpInFaction;
+    private boolean keepItemInFaction;
+    private boolean keepExpInFactionWilderness;
+    private boolean keepItemInFactionWilderness;
 
     public TimeKeep(@NotNull String id, long from, long to, @NotNull WorldGroup worldGroup) {
         Preconditions.checkNotNull(id);
@@ -109,36 +117,105 @@ public class TimeKeep {
         this.allowSoulGem = allowSoulGem;
     }
 
-    public boolean isKeepItemOnOwnedLandChunk() {
-        return keepItemOnOwnedLandChunk;
+    public boolean isKeepExpInArea() {
+        return keepExpInArea;
     }
 
-    public void setKeepItemOnOwnedLandChunk(boolean keepItemOnOwnedLandChunk) {
-        this.keepItemOnOwnedLandChunk = keepItemOnOwnedLandChunk;
+    public void setKeepExpInArea(boolean keepExpInArea) {
+        this.keepExpInArea = keepExpInArea;
     }
 
-    public boolean isKeepItemOnInvitedLandChunk() {
-        return keepItemOnInvitedLandChunk;
+    public boolean isKeepItemInArea() {
+        return keepItemInArea;
     }
 
-    public void setKeepItemOnInvitedLandChunk(boolean keepItemOnInvitedLandChunk) {
-        this.keepItemOnInvitedLandChunk = keepItemOnInvitedLandChunk;
+    public void setKeepItemInArea(boolean keepItemInArea) {
+        this.keepItemInArea = keepItemInArea;
     }
 
-    public boolean isKeepExpOnOwnedLandChunk() {
-        return keepExpOnOwnedLandChunk;
+    public boolean isKeepExpInLandsWilderness() {
+        return keepExpInLandsWilderness;
     }
 
-    public void setKeepExpOnOwnedLandChunk(boolean keepExpOnOwnedLandChunk) {
-        this.keepExpOnOwnedLandChunk = keepExpOnOwnedLandChunk;
+    public void setKeepExpInLandsWilderness(boolean keepExpInLandsWilderness) {
+        this.keepExpInLandsWilderness = keepExpInLandsWilderness;
     }
 
-    public boolean isKeepExpOnInvitedLandChunk() {
-        return keepExpOnInvitedLandChunk;
+    public boolean isKeepItemInLandsWilderness() {
+        return keepItemInLandsWilderness;
     }
 
-    public void setKeepExpOnInvitedLandChunk(boolean keepExpOnInvitedLandChunk) {
-        this.keepExpOnInvitedLandChunk = keepExpOnInvitedLandChunk;
+    public void setKeepItemInLandsWilderness(boolean keepItemInLandsWilderness) {
+        this.keepItemInLandsWilderness = keepItemInLandsWilderness;
+    }
+
+    public boolean isKeepExpInTown() {
+        return keepExpInTown;
+    }
+
+    public void setKeepExpInTown(boolean keepExpInTown) {
+        this.keepExpInTown = keepExpInTown;
+    }
+
+    public boolean isKeepItemInTown() {
+        return keepItemInTown;
+    }
+
+    public void setKeepItemInTown(boolean keepItemInTown) {
+        this.keepItemInTown = keepItemInTown;
+    }
+
+    public boolean isKeepExpInTownyWilderness() {
+        return keepExpInTownyWilderness;
+    }
+
+    public void setKeepExpInTownyWilderness(boolean keepExpInTownyWilderness) {
+        this.keepExpInTownyWilderness = keepExpInTownyWilderness;
+    }
+
+    public boolean isKeepItemInTownyWilderness() {
+        return keepItemInTownyWilderness;
+    }
+
+    public void setKeepItemInTownyWilderness(boolean keepItemInTownyWilderness) {
+        this.keepItemInTownyWilderness = keepItemInTownyWilderness;
+    }
+
+    public boolean isKeepExpInFaction() {
+        return keepExpInFaction;
+    }
+
+    public void setKeepExpInFaction(boolean keepExpInFaction) {
+        this.keepExpInFaction = keepExpInFaction;
+    }
+
+    public boolean isKeepItemInFaction() {
+        return keepItemInFaction;
+    }
+
+    public void setKeepItemInFaction(boolean keepItemInFaction) {
+        this.keepItemInFaction = keepItemInFaction;
+    }
+
+    public boolean isKeepExpInFactionWilderness() {
+        return keepExpInFactionWilderness;
+    }
+
+    public void setKeepExpInFactionWilderness(boolean keepExpInFactionWilderness) {
+        this.keepExpInFactionWilderness = keepExpInFactionWilderness;
+    }
+
+    public boolean isKeepItemInFactionWilderness() {
+        return keepItemInFactionWilderness;
+    }
+
+    public void setKeepItemInFactionWilderness(boolean keepItemInFactionWilderness) {
+        this.keepItemInFactionWilderness = keepItemInFactionWilderness;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, worldGroup.get());
     }
 
     @Override
@@ -152,19 +229,22 @@ public class TimeKeep {
                 keepExp == timeKeep.keepExp &&
                 enableDeathChest == timeKeep.enableDeathChest &&
                 allowSoulGem == timeKeep.allowSoulGem &&
-                keepItemOnOwnedLandChunk == timeKeep.keepItemOnOwnedLandChunk &&
-                keepItemOnInvitedLandChunk == timeKeep.keepItemOnInvitedLandChunk &&
-                keepExpOnOwnedLandChunk == timeKeep.keepExpOnOwnedLandChunk &&
-                keepExpOnInvitedLandChunk == timeKeep.keepExpOnInvitedLandChunk &&
-                chatBroadcast.equals(timeKeep.chatBroadcast) &&
+                keepExpInArea == timeKeep.keepExpInArea &&
+                keepItemInArea == timeKeep.keepItemInArea &&
+                keepExpInLandsWilderness == timeKeep.keepExpInLandsWilderness &&
+                keepItemInLandsWilderness == timeKeep.keepItemInLandsWilderness &&
+                keepExpInTown == timeKeep.keepExpInTown &&
+                keepItemInTown == timeKeep.keepItemInTown &&
+                keepExpInTownyWilderness == timeKeep.keepExpInTownyWilderness &&
+                keepItemInTownyWilderness == timeKeep.keepItemInTownyWilderness &&
+                keepExpInFaction == timeKeep.keepExpInFaction &&
+                keepItemInFaction == timeKeep.keepItemInFaction &&
+                keepExpInFactionWilderness == timeKeep.keepExpInFactionWilderness &&
+                keepItemInFactionWilderness == timeKeep.keepItemInFactionWilderness &&
+                Objects.equals(chatBroadcast, timeKeep.chatBroadcast) &&
                 id.equals(timeKeep.id) &&
                 sound == timeKeep.sound &&
                 Objects.equals(actionBarBroadcast, timeKeep.actionBarBroadcast) &&
-                Objects.equals(worldGroup.get(), timeKeep.worldGroup.get());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, worldGroup.get());
+                worldGroup.equals(timeKeep.worldGroup);
     }
 }

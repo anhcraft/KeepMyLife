@@ -7,12 +7,12 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import org.bukkit.Location;
 
-public class WGFlags {
+public class WorldGuardHook {
     public StateFlag KEEP_ITEM_FLAG = new StateFlag("keep-item", false);
     public StateFlag KEEP_EXP_FLAG = new StateFlag("keep-exp", false);
     public StateFlag USE_SOUL_GEM_FLAG = new StateFlag("allow-use-soul-gem", false);
 
-    public WGFlags(){
+    public WorldGuardHook(){
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         registry.register(KEEP_ITEM_FLAG);
         registry.register(KEEP_EXP_FLAG);

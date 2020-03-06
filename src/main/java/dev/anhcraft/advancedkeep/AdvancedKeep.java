@@ -9,11 +9,9 @@ import dev.anhcraft.advancedkeep.api.WorldGroup;
 import dev.anhcraft.advancedkeep.api.events.PlayerKeepEvent;
 import dev.anhcraft.advancedkeep.api.events.SoulGemUseEvent;
 import dev.anhcraft.advancedkeep.cmd.AdminCmd;
-import dev.anhcraft.advancedkeep.integrations.LandAddon;
-import dev.anhcraft.advancedkeep.integrations.WGFlags;
+import dev.anhcraft.advancedkeep.integrations.*;
 import dev.anhcraft.confighelper.ConfigHelper;
 import dev.anhcraft.confighelper.exception.InvalidValueException;
-import dev.anhcraft.craftkit.abif.ABIF;
 import dev.anhcraft.craftkit.abif.PreparedItem;
 import dev.anhcraft.craftkit.cb_common.NMSVersion;
 import dev.anhcraft.craftkit.cb_common.nbt.CompoundTag;
@@ -36,9 +34,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -66,8 +62,10 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     public Chat chat;
     private ItemStack soulGem;
     private ShapedRecipe currentRecipe;
-    private LandAddon landAddon;
-    private WGFlags wgFlags;
+    private LandsHook landsHook;
+    private WorldGuardHook worldGuardHook;
+    private TownyHook townyHook;
+    private SaberFactionsHook saberFactionsHook;
     private boolean needUpdatePlugin;
     private boolean needUpdateDeathChestConf;
     private TaskHelper task;
@@ -123,10 +121,20 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                     tk.setKeepExp(stk.getBoolean("keep_exp"));
                     tk.setAllowSoulGem(stk.getBoolean("allow_soul_gem"));
                     tk.setEnableDeathChest(stk.getBoolean("enable_death_chest"));
-                    tk.setKeepItemOnInvitedLandChunk(stk.getBoolean("keep_items_on_invited_landchunks"));
-                    tk.setKeepExpOnInvitedLandChunk(stk.getBoolean("keep_exp_on_invited_landchunks"));
-                    tk.setKeepItemOnOwnedLandChunk(stk.getBoolean("keep_items_on_owned_landchunks"));
-                    tk.setKeepExpOnOwnedLandChunk(stk.getBoolean("keep_exp_on_owned_landchunks"));
+
+                    tk.setKeepItemInArea(stk.getBoolean("lands.keep_items_in_areas"));
+                    tk.setKeepItemInTown(stk.getBoolean("towny.keep_items_in_town"));
+                    tk.setKeepItemInFaction(stk.getBoolean("faction.keep_items_in_faction"));
+                    tk.setKeepExpInArea(stk.getBoolean("lands.keep_exp_in_areas"));
+                    tk.setKeepExpInTown(stk.getBoolean("towny.keep_exp_in_town"));
+                    tk.setKeepExpInFaction(stk.getBoolean("faction.keep_exp_in_faction"));
+
+                    tk.setKeepItemInLandsWilderness(stk.getBoolean("lands.keep_items_in_wilderness"));
+                    tk.setKeepItemInTownyWilderness(stk.getBoolean("towny.keep_items_in_wilderness"));
+                    tk.setKeepItemInFactionWilderness(stk.getBoolean("faction.keep_items_in_wilderness"));
+                    tk.setKeepExpInLandsWilderness(stk.getBoolean("lands.keep_exp_in_wilderness"));
+                    tk.setKeepExpInTownyWilderness(stk.getBoolean("towny.keep_exp_in_wilderness"));
+                    tk.setKeepExpInFactionWilderness(stk.getBoolean("faction.keep_exp_in_wilderness"));
 
                     if (stk.isSet("sound")){
                         String s = stk.getString("sound");
@@ -200,7 +208,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     @Override
     public void onLoad(){
         if(getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-            wgFlags = new WGFlags();
+            worldGuardHook = new WorldGuardHook();
         }
     }
 
@@ -215,8 +223,18 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         DC_CONF.options().header("This is the data file. Please do not touch if you are not sure!");
         initConf();
 
-        if(getServer().getPluginManager().isPluginEnabled("Lands"))
-            landAddon = new LandAddon(this);
+        if(getServer().getPluginManager().isPluginEnabled("Lands")) {
+            landsHook = new LandsHook(this);
+            getLogger().info("Hooked to Lands");
+        }
+        if(getServer().getPluginManager().isPluginEnabled("Towny")) {
+            townyHook = new TownyHook();
+            getLogger().info("Hooked to Towny");
+        }
+        if(getServer().getPluginManager().isPluginEnabled("Factions")) {
+            saberFactionsHook = new SaberFactionsHook();
+            getLogger().info("Hooked to SaberFactions");
+        }
 
         if(CONF.getBoolean("check_update")){
             task.newDelayedAsyncTask(() -> {
@@ -296,7 +314,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             }
         }, 0, 20);
 
-        new Metrics(this);
+        new Metrics(this, 6141);
     }
 
     @NotNull
@@ -408,22 +426,79 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             soulGem = tk.isAllowSoulGem();
             deathChest = tk.isEnableDeathChest();
 
-            if(landAddon != null){
-                PresentPair<Boolean, Boolean> x = landAddon.isOnOwnLandChunk(p);
-                if(tk.isKeepItemOnOwnedLandChunk() && x.getFirst())
-                    keepItem = true;
-                else if(tk.isKeepItemOnInvitedLandChunk() && (x.getFirst() || x.getSecond()))
-                    keepItem = true;
-
-                if(tk.isKeepExpOnOwnedLandChunk() && x.getFirst())
-                    keepExp = true;
-                else if(tk.isKeepExpOnInvitedLandChunk() && (x.getFirst() || x.getSecond()))
-                    keepExp = true;
+            if(landsHook != null){
+                ClaimStatus status = landsHook.getAreaStatus(p);
+                switch (status) {
+                    case WILD: {
+                        if(tk.isKeepItemInLandsWilderness()) {
+                            keepItem = true;
+                        }
+                        if(tk.isKeepExpInLandsWilderness()) {
+                            keepExp = true;
+                        }
+                        break;
+                    }
+                    case OWN: {
+                        if(tk.isKeepItemInArea()) {
+                            keepItem = true;
+                        }
+                        if(tk.isKeepExpInArea()) {
+                            keepExp = true;
+                        }
+                        break;
+                    }
+                }
+            }
+            else if(townyHook != null){
+                ClaimStatus status = townyHook.getAreaStatus(p);
+                switch (status) {
+                    case WILD: {
+                        if(tk.isKeepItemInTownyWilderness()) {
+                            keepItem = true;
+                        }
+                        if(tk.isKeepExpInTownyWilderness()) {
+                            keepExp = true;
+                        }
+                        break;
+                    }
+                    case OWN: {
+                        if(tk.isKeepItemInTown()) {
+                            keepItem = true;
+                        }
+                        if(tk.isKeepExpInTown()) {
+                            keepExp = true;
+                        }
+                        break;
+                    }
+                }
+            }
+            else if(saberFactionsHook != null){
+                ClaimStatus status = saberFactionsHook.getAreaStatus(p);
+                switch (status) {
+                    case WILD: {
+                        if(tk.isKeepItemInFactionWilderness()) {
+                            keepItem = true;
+                        }
+                        if(tk.isKeepExpInFactionWilderness()) {
+                            keepExp = true;
+                        }
+                        break;
+                    }
+                    case OWN: {
+                        if(tk.isKeepItemInFaction()) {
+                            keepItem = true;
+                        }
+                        if(tk.isKeepExpInFaction()) {
+                            keepExp = true;
+                        }
+                        break;
+                    }
+                }
             }
         }
 
-        if(wgFlags != null) {
-            Boolean[] flags = wgFlags.getFlagState(location);
+        if(worldGuardHook != null) {
+            Boolean[] flags = worldGuardHook.getFlagState(location);
             if(flags[0] != null) keepItem = flags[0];
             if(flags[1] != null) keepExp = flags[1];
             if(flags[2] != null) soulGem = flags[2];
