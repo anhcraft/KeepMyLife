@@ -58,7 +58,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
                 <configuration>
                     <finalName>${project.artifactId}</finalName>
                     <minimizeJar>false</minimizeJar>
@@ -139,13 +139,13 @@
         <dependency>
             <groupId>com.github.Angeschossen</groupId>
             <artifactId>LandsAPI</artifactId>
-            <version>4.5.0.7</version>
+            <version>4.5.2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.1.7</version>
+            <version>1.1.8</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
