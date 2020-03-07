@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.*;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import dev.anhcraft.advancedkeep.AdvancedKeep;
 import dev.anhcraft.advancedkeep.api.DeathChest;
+import dev.anhcraft.advancedkeep.gui.WorldGroupGUI;
 import dev.anhcraft.craftkit.utils.ItemUtil;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -76,6 +77,21 @@ public class AdminCmd extends BaseCommand {
         if(!b){
             instance.chat.message(sender, "&cNo death chest found for that player!");
         }
+    }
+
+    @Subcommand("config gui")
+    @CommandPermission("keep.config.gui")
+    @Description("Open the configuration GUI")
+    public void gui(Player player){
+        WorldGroupGUI.openWorldGroupMenu(player, 1);
+    }
+
+    @Subcommand("config save")
+    @CommandPermission("keep.config.save")
+    @Description("Save the configuration")
+    public void save(CommandSender sender){
+        instance.saveConf();
+        instance.chat.message(sender, "&bThe configuration was saved successfully!");
     }
 
     @Subcommand("reload")

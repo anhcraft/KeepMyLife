@@ -48,6 +48,18 @@ public interface KeepAPI {
     List<WorldGroup> getWorldGroups();
 
     /**
+     * Adds new world group.
+     * @param worldGroup the group to be added.
+     */
+    void addWorldGroup(@NotNull WorldGroup worldGroup);
+
+    /**
+     * Removes a world group
+     * @param id group's id
+     */
+    void removeWorldGroup(@NotNull String id);
+
+    /**
      * Gets all death chests.
      * @return an immutable list of {@link DeathChest}
      */

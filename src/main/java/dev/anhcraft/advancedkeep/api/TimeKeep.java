@@ -1,6 +1,9 @@
 package dev.anhcraft.advancedkeep.api;
 
 import com.google.common.base.Preconditions;
+import dev.anhcraft.confighelper.annotation.Key;
+import dev.anhcraft.confighelper.annotation.PrettyEnum;
+import dev.anhcraft.confighelper.annotation.Schema;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,37 +13,79 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Schema
 public class TimeKeep {
-    private final List<String> chatBroadcast = new ArrayList<>();
     private String id;
-    private long from;
-    private long to;
-    private Sound sound;
-    private String actionBarBroadcast;
     private WeakReference<WorldGroup> worldGroup;
+
+    @Key("from")
+    private long from;
+
+    @Key("to")
+    private long to;
+
+    @Key("broadcast.chat")
+    private List<String> chatBroadcast = new ArrayList<>();
+
+    @Key("broadcast.action_bar")
+    private String actionBarBroadcast;
+
+    @Key("sound")
+    @PrettyEnum
+    private Sound sound;
+
+    @Key("keep_item")
     private boolean keepItem;
+
+    @Key("keep_exp")
     private boolean keepExp;
+
+    @Key("enable_death_chest")
     private boolean enableDeathChest;
+
+    @Key("allow_soul_gem")
     private boolean allowSoulGem;
+
+    @Key("lands.keep_exp_in_areas")
     private boolean keepExpInArea;
+
+    @Key("lands.keep_items_in_areas")
     private boolean keepItemInArea;
+
+    @Key("lands.keep_exp_in_wilderness")
     private boolean keepExpInLandsWilderness;
+
+    @Key("lands.keep_items_in_wilderness")
     private boolean keepItemInLandsWilderness;
+
+    @Key("towny.keep_exp_in_town")
     private boolean keepExpInTown;
+
+    @Key("towny.keep_items_in_town")
     private boolean keepItemInTown;
+
+    @Key("towny.keep_exp_in_wilderness")
     private boolean keepExpInTownyWilderness;
+
+    @Key("towny.keep_items_in_wilderness")
     private boolean keepItemInTownyWilderness;
+
+    @Key("faction.keep_exp_in_faction")
     private boolean keepExpInFaction;
+
+    @Key("faction.keep_items_in_faction")
     private boolean keepItemInFaction;
+
+    @Key("faction.keep_exp_in_wilderness")
     private boolean keepExpInFactionWilderness;
+
+    @Key("faction.keep_items_in_wilderness")
     private boolean keepItemInFactionWilderness;
 
-    public TimeKeep(@NotNull String id, long from, long to, @NotNull WorldGroup worldGroup) {
+    public TimeKeep(@NotNull String id, @NotNull WorldGroup worldGroup) {
         Preconditions.checkNotNull(id);
         Preconditions.checkNotNull(worldGroup);
         this.id = id;
-        this.from = from;
-        this.to = to;
         this.worldGroup = new WeakReference<>(worldGroup);
     }
 
@@ -53,8 +98,16 @@ public class TimeKeep {
         return from;
     }
 
+    public void setFrom(long from) {
+        this.from = from;
+    }
+
     public long getTo() {
         return to;
+    }
+
+    public void setTo(long to) {
+        this.to = to;
     }
 
     @NotNull

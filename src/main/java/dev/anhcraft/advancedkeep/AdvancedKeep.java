@@ -2,15 +2,13 @@ package dev.anhcraft.advancedkeep;
 
 import co.aikar.commands.PaperCommandManager;
 import com.google.common.collect.ImmutableList;
-import dev.anhcraft.advancedkeep.api.DeathChest;
-import dev.anhcraft.advancedkeep.api.KeepAPI;
-import dev.anhcraft.advancedkeep.api.TimeKeep;
-import dev.anhcraft.advancedkeep.api.WorldGroup;
+import dev.anhcraft.advancedkeep.api.*;
 import dev.anhcraft.advancedkeep.api.events.PlayerKeepEvent;
 import dev.anhcraft.advancedkeep.api.events.SoulGemUseEvent;
 import dev.anhcraft.advancedkeep.cmd.AdminCmd;
 import dev.anhcraft.advancedkeep.integrations.*;
 import dev.anhcraft.confighelper.ConfigHelper;
+import dev.anhcraft.confighelper.ConfigSchema;
 import dev.anhcraft.confighelper.exception.InvalidValueException;
 import dev.anhcraft.craftkit.abif.PreparedItem;
 import dev.anhcraft.craftkit.cb_common.NMSVersion;
@@ -48,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -73,6 +72,30 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
     private int hashBlockLocation(Location location){
         return Objects.hash(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
+    public void saveConf(){
+        File[] files = getDataFolder().listFiles((dir, name) -> name.startsWith("config.old."));
+        int count = files == null ? 0 : files.length;
+        File a = new File(getDataFolder(), "config.yml");
+        File b = new File(getDataFolder(), "config.old."+count+".yml");
+        try {
+            a.createNewFile();
+            b.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FileUtil.copy(a, b);
+        for(WorldGroup wg : WG.values()) {
+            YamlConfiguration c = new YamlConfiguration();
+            ConfigHelper.writeConfig(c, ConfigSchema.of(WorldGroup.class), wg);
+            CONF.set("world_groups."+wg.getId(), c);
+        }
+        try {
+            CONF.save(a);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initConf() {
@@ -111,46 +134,10 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         ConfigurationSection wgs = CONF.getConfigurationSection("world_groups");
         for(String id : wgs.getKeys(false)) {
             WorldGroup wg = new WorldGroup(id);
-            wg.getWorlds().addAll(wgs.getStringList(id+".worlds"));
-            ConfigurationSection tks = wgs.getConfigurationSection(id+".time_keep");
-            if(tks != null) {
-                for (String tki : tks.getKeys(false)) {
-                    ConfigurationSection stk = tks.getConfigurationSection(tki);
-                    TimeKeep tk = new TimeKeep(tki, stk.getLong("from"), stk.getLong("to"), wg);
-                    tk.setKeepItem(stk.getBoolean("keep_item"));
-                    tk.setKeepExp(stk.getBoolean("keep_exp"));
-                    tk.setAllowSoulGem(stk.getBoolean("allow_soul_gem"));
-                    tk.setEnableDeathChest(stk.getBoolean("enable_death_chest"));
-
-                    tk.setKeepItemInArea(stk.getBoolean("lands.keep_items_in_areas"));
-                    tk.setKeepItemInTown(stk.getBoolean("towny.keep_items_in_town"));
-                    tk.setKeepItemInFaction(stk.getBoolean("faction.keep_items_in_faction"));
-                    tk.setKeepExpInArea(stk.getBoolean("lands.keep_exp_in_areas"));
-                    tk.setKeepExpInTown(stk.getBoolean("towny.keep_exp_in_town"));
-                    tk.setKeepExpInFaction(stk.getBoolean("faction.keep_exp_in_faction"));
-
-                    tk.setKeepItemInLandsWilderness(stk.getBoolean("lands.keep_items_in_wilderness"));
-                    tk.setKeepItemInTownyWilderness(stk.getBoolean("towny.keep_items_in_wilderness"));
-                    tk.setKeepItemInFactionWilderness(stk.getBoolean("faction.keep_items_in_wilderness"));
-                    tk.setKeepExpInLandsWilderness(stk.getBoolean("lands.keep_exp_in_wilderness"));
-                    tk.setKeepExpInTownyWilderness(stk.getBoolean("towny.keep_exp_in_wilderness"));
-                    tk.setKeepExpInFactionWilderness(stk.getBoolean("faction.keep_exp_in_wilderness"));
-
-                    if (stk.isSet("sound")){
-                        String s = stk.getString("sound");
-                        if(!s.isEmpty()) {
-                            try {
-                                tk.setSound(Sound.valueOf(s.toUpperCase()));
-                            } catch (IllegalArgumentException ignored) {
-                                getLogger().warning("Sound not found!");
-                            }
-                        }
-                    }
-                    if (stk.isSet("broadcast.action_bar"))
-                        tk.setActionBarBroadcast(ChatUtil.formatColorCodes(stk.getString("broadcast.action_bar")));
-                    tk.getChatBroadcast().addAll(ChatUtil.formatColorCodes(stk.getStringList("broadcast.chat")));
-                    wg.getTimeKeep().add(tk);
-                }
+            try {
+                ConfigHelper.readConfig(wgs.getConfigurationSection(id), ConfigSchema.of(WorldGroup.class), wg);
+            } catch (InvalidValueException e) {
+                e.printStackTrace();
             }
             wg.getWorlds().forEach(s -> WG.put(s, wg));
         }
@@ -315,6 +302,8 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         }, 0, 20);
 
         new Metrics(this, 6141);
+
+        ReflectionUtil.setDeclaredStaticField(ApiProvider.class, "api", this);
     }
 
     @NotNull
@@ -347,6 +336,16 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     @NotNull
     public List<WorldGroup> getWorldGroups() {
         return ImmutableList.copyOf(WG.values());
+    }
+
+    @Override
+    public void addWorldGroup(@NotNull WorldGroup worldGroup) {
+        WG.putIfAbsent(worldGroup.getId(), worldGroup);
+    }
+
+    @Override
+    public void removeWorldGroup(@NotNull String id) {
+        WG.remove(id);
     }
 
     @Override
