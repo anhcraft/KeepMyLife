@@ -34,15 +34,12 @@ public class WorldGroupGUI {
             for (WorldGroup wg : pagination.collect()) {
                 ItemBuilder itemBuilder = new ItemBuilder(Material.MAP).name("&7" + wg.getId());
                 itemBuilder.lore("&f- Worlds (" + wg.getWorlds().size() + ")");
-                for (String w : wg.getWorlds()) {
-                    itemBuilder.lore("&f  + " + w);
-                }
                 itemBuilder.lore("&f- Time keeps (" + wg.getTimeKeep().size() + ")");
                 gui.setItem(i++, itemBuilder.build(), new SlotCallback() {
                     @Override
                     public void click(InventoryClickEvent event, Player player, BaseGUI gui) {
                         if (event.isShiftClick()) {
-                            ApiProvider.consume().removeWorldGroup(wg.getId());
+                            ApiProvider.consume().removeWorldGroup(wg);
                             openWorldGroupMenu(player, page);
                         } else {
                             openWorldGroup(player, page, wg);

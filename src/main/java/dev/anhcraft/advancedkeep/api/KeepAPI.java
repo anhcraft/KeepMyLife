@@ -55,9 +55,9 @@ public interface KeepAPI {
 
     /**
      * Removes a world group
-     * @param id group's id
+     * @param worldGroup group
      */
-    void removeWorldGroup(@NotNull String id);
+    void removeWorldGroup(@NotNull WorldGroup worldGroup);
 
     /**
      * Gets all death chests.

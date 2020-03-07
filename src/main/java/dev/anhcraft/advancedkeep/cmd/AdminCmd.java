@@ -54,7 +54,7 @@ public class AdminCmd extends BaseCommand {
     @CommandPermission("keep.deathchest.teleport")
     @Description("Teleport to a random death chest of someone")
     public void teleportDeathChest(CommandSender sender, Player target){
-        for (DeathChest dc : instance.DC.values()){
+        for (DeathChest dc : instance.DEATHCHEST.values()){
             if(dc.getOwner().equals(target.getUniqueId())){
                 target.teleport(dc.getLocation());
                 break;
@@ -67,7 +67,7 @@ public class AdminCmd extends BaseCommand {
     @Description("List all death chest of someone")
     public void listDeathChest(CommandSender sender, OfflinePlayer target){
         boolean b = false;
-        for (DeathChest dc : instance.DC.values()){
+        for (DeathChest dc : instance.DEATHCHEST.values()){
             if(dc.getOwner().equals(target.getUniqueId())) {
                 Location l = dc.getLocation();
                 instance.chat.message(sender, "&aWorld: "+l.getWorld().getName()+"; X/Y/Z: "+l.getBlockX()+" "+l.getBlockY()+" "+l.getBlockZ());

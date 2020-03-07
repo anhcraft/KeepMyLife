@@ -15,7 +15,6 @@ import dev.anhcraft.craftkit.cb_common.NMSVersion;
 import dev.anhcraft.craftkit.cb_common.nbt.CompoundTag;
 import dev.anhcraft.craftkit.chat.ActionBar;
 import dev.anhcraft.craftkit.chat.Chat;
-import dev.anhcraft.craftkit.common.utils.ChatUtil;
 import dev.anhcraft.craftkit.common.utils.SpigotApiUtil;
 import dev.anhcraft.craftkit.helpers.ItemNBTHelper;
 import dev.anhcraft.craftkit.helpers.TaskHelper;
@@ -46,17 +45,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener {
     private final YamlConfiguration CONF = new YamlConfiguration();
-    private final Map<String, WorldGroup> WG = new ConcurrentHashMap<>();
-    private final Map<World, TimeKeep> TK = new ConcurrentHashMap<>();
-    public final Map<Integer, DeathChest> DC = new ConcurrentHashMap<>();
+    private final List<WorldGroup> WORLDGROUPS = new CopyOnWriteArrayList<>();
+    private final Map<String, WorldGroup> WORLD2GROUP = new ConcurrentHashMap<>();
+    private final Map<String, TimeKeep> WORLD2TIMEKEEP = new ConcurrentHashMap<>();
+    public final Map<Integer, DeathChest> DEATHCHEST = new ConcurrentHashMap<>();
     private final YamlConfiguration DC_CONF = new YamlConfiguration();
     public Chat chat;
     private ItemStack soulGem;
@@ -86,7 +86,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             e.printStackTrace();
         }
         FileUtil.copy(a, b);
-        for(WorldGroup wg : WG.values()) {
+        for(WorldGroup wg : WORLDGROUPS) {
             YamlConfiguration c = new YamlConfiguration();
             ConfigHelper.writeConfig(c, ConfigSchema.of(WorldGroup.class), wg);
             CONF.set("world_groups."+wg.getId(), c);
@@ -129,8 +129,9 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         helper.getTag().put(CONF.getString("soul_gem.nbt_tag"), System.currentTimeMillis());
         soulGem = helper.save();
 
-        WG.clear();
-        TK.clear();
+        WORLDGROUPS.clear();
+        WORLD2GROUP.clear();
+        WORLD2TIMEKEEP.clear();
         ConfigurationSection wgs = CONF.getConfigurationSection("world_groups");
         for(String id : wgs.getKeys(false)) {
             WorldGroup wg = new WorldGroup(id);
@@ -139,7 +140,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             } catch (InvalidValueException e) {
                 e.printStackTrace();
             }
-            wg.getWorlds().forEach(s -> WG.put(s, wg));
+            addWorldGroup(wg);
         }
 
         if(currentRecipe != null) RecipeUtil.unregister(currentRecipe);
@@ -181,7 +182,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 b.getState().update(true);
                 needUpdateDeathChestConf = true;
             }
-            DC.put(hashBlockLocation(location), new DeathChest(s, owner, location, date, items));
+            DEATHCHEST.put(hashBlockLocation(location), new DeathChest(s, owner, location, date, items));
         }
 
         String s = CONF.getString("death_chest.material");
@@ -235,18 +236,18 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         }
 
         task.newAsyncTimerTask(() -> {
-            WG.forEach((key, value) -> {
+            WORLD2GROUP.forEach((key, value) -> {
                 World world = getServer().getWorld(key);
                 if(world == null) return;
                 for(TimeKeep timeKeep : value.getTimeKeep()){
-                    TimeKeep x = TK.get(world);
+                    TimeKeep x = WORLD2TIMEKEEP.get(world.getName());
                     long cur = world.getTime();
                     if(cur < timeKeep.getFrom() || cur > timeKeep.getTo()) {
-                        if(x != null && x == timeKeep) TK.remove(world);
+                        if(x != null && x == timeKeep) WORLD2TIMEKEEP.remove(world.getName());
                         continue;
                     }
                     if(x != null && x == timeKeep) continue;
-                    TK.put(world, timeKeep);
+                    WORLD2TIMEKEEP.put(world.getName(), timeKeep);
                     if(timeKeep.getSound() != null)
                         world.getPlayers().forEach(p -> {
                             p.playSound(p.getLocation(), timeKeep.getSound(), 3f, 1f);
@@ -258,10 +259,10 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 }
             });
 
-            DC.forEach((id, dc) -> {
+            DEATHCHEST.forEach((id, dc) -> {
                 if(dc.getLocation().getBlock().getType() != deathChestMaterial) {
                     Location l = dc.getLocation();
-                    DC.remove(id);
+                    DEATHCHEST.remove(id);
                     if(dc.getItems() != null){
                         task.newTask(() -> {
                             for (ItemStack item : dc.getItems()){
@@ -284,7 +285,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             if(needUpdateDeathChestConf){
                 needUpdateDeathChestConf = false;
                 DC_CONF.getKeys(false).forEach(s -> DC_CONF.set(s, null));
-                DC.forEach((id, dc) -> {
+                DEATHCHEST.forEach((id, dc) -> {
                     ConfigurationSection c = new YamlConfiguration();
                     c.set("owner.lsb", dc.getOwner().getLeastSignificantBits());
                     c.set("owner.msb", dc.getOwner().getMostSignificantBits());
@@ -323,41 +324,43 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     @Override
     @NotNull
     public List<World> getKeepItemWorlds() {
-        return TK.entrySet().stream().filter(x -> x.getValue().isKeepItem()).map(Map.Entry::getKey).collect(ImmutableList.toImmutableList());
+        return WORLD2TIMEKEEP.entrySet().stream().filter(x -> x.getValue().isKeepItem()).map(Map.Entry::getKey).map(Bukkit::getWorld).collect(ImmutableList.toImmutableList());
     }
 
     @Override
     @NotNull
     public List<World> getKeepExpWorlds() {
-        return TK.entrySet().stream().filter(x -> x.getValue().isKeepExp()).map(Map.Entry::getKey).collect(ImmutableList.toImmutableList());
+        return WORLD2TIMEKEEP.entrySet().stream().filter(x -> x.getValue().isKeepExp()).map(Map.Entry::getKey).map(Bukkit::getWorld).collect(ImmutableList.toImmutableList());
     }
 
     @Override
     @NotNull
     public List<WorldGroup> getWorldGroups() {
-        return ImmutableList.copyOf(WG.values());
+        return ImmutableList.copyOf(WORLDGROUPS);
     }
 
     @Override
     public void addWorldGroup(@NotNull WorldGroup worldGroup) {
-        WG.putIfAbsent(worldGroup.getId(), worldGroup);
+        WORLDGROUPS.add(worldGroup);
+        worldGroup.getWorlds().forEach(s -> WORLD2GROUP.putIfAbsent(s, worldGroup));
     }
 
     @Override
-    public void removeWorldGroup(@NotNull String id) {
-        WG.remove(id);
+    public void removeWorldGroup(@NotNull WorldGroup worldGroup) {
+        WORLDGROUPS.remove(worldGroup);
+        worldGroup.getWorlds().forEach(WORLD2GROUP::remove);
     }
 
     @Override
     @NotNull
     public List<DeathChest> getDeathChests() {
-        return ImmutableList.copyOf(DC.values());
+        return ImmutableList.copyOf(DEATHCHEST.values());
     }
 
     @Override
     @Nullable
     public DeathChest getDeathChestAt(@NotNull Location location) {
-        return DC.get(hashBlockLocation(location));
+        return DEATHCHEST.get(hashBlockLocation(location));
     }
 
     @EventHandler
@@ -372,7 +375,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         if(event.hasBlock()){
             Block b = event.getClickedBlock();
             int x = hashBlockLocation(b.getLocation());
-            DeathChest dc = DC.get(x);
+            DeathChest dc = DEATHCHEST.get(x);
             if(dc != null) {
                 if(CONF.getBoolean("death_chest.lock_death_chest") && !event.getPlayer().getUniqueId().equals(dc.getOwner())){
                     event.setCancelled(true);
@@ -389,7 +392,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         for (Iterator<Block> it = event.blockList().iterator(); it.hasNext(); ) {
             Block b = it.next();
             int h = hashBlockLocation(b.getLocation());
-            if(DC.containsKey(h)) {
+            if(DEATHCHEST.containsKey(h)) {
                 it.remove();
             }
         }
@@ -400,7 +403,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         for (Iterator<Block> it = event.blockList().iterator(); it.hasNext(); ) {
             Block b = it.next();
             int h = hashBlockLocation(b.getLocation());
-            if(DC.containsKey(h)) {
+            if(DEATHCHEST.containsKey(h)) {
                 it.remove();
             }
         }
@@ -410,14 +413,14 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     public void death(PlayerDeathEvent event){
         Player p = event.getEntity();
         Location location = p.getLocation();
-        WorldGroup wg = WG.get(p.getWorld().getName());
+        WorldGroup wg = WORLD2GROUP.get(p.getWorld().getName());
         if(wg == null) return;
         // we will keep if either the player has specified permissions or he is on a safe world
         boolean keepItem = event.getKeepInventory();
         boolean keepExp = event.getKeepLevel();
         boolean soulGem = false;
         boolean deathChest = false;
-        TimeKeep tk = TK.get(p.getWorld());
+        TimeKeep tk = WORLD2TIMEKEEP.get(p.getWorld());
         if(tk != null){
             // oh be sure the player does not have those permissions, we do not want he loses his items only because his world is unsafe ~
             if(!keepItem) keepItem = tk.isKeepItem();
@@ -560,7 +563,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 if (b.getType() != deathChestMaterial) {
                     b.setType(deathChestMaterial);
                 }
-                DeathChest chest = DC.compute(hashBlockLocation(location), (id, dc) -> {
+                DeathChest chest = DEATHCHEST.compute(hashBlockLocation(location), (id, dc) -> {
                     if(dc == null) {
                         return new DeathChest(
                                 new String(RandomUtil.randomLetters(10)),
