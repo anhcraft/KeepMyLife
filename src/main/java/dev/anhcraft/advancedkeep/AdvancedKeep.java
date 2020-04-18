@@ -420,7 +420,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         boolean keepExp = event.getKeepLevel();
         boolean soulGem = false;
         boolean deathChest = false;
-        TimeKeep tk = WORLD2TIMEKEEP.get(p.getWorld());
+        TimeKeep tk = WORLD2TIMEKEEP.get(p.getWorld().getName());
         if(tk != null){
             // oh be sure the player does not have those permissions, we do not want he loses his items only because his world is unsafe ~
             if(!keepItem) keepItem = tk.isKeepItem();
