@@ -220,8 +220,11 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             getLogger().info("Hooked to Towny");
         }
         if(getServer().getPluginManager().isPluginEnabled("Factions")) {
-            saberFactionsHook = new SaberFactionsHook();
-            getLogger().info("Hooked to SaberFactions");
+            try {
+                Class.forName("com.massivecraft.factions.Board");
+                saberFactionsHook = new SaberFactionsHook();
+                getLogger().info("Hooked to SaberFactions");
+            } catch (ClassNotFoundException ignored) { }
         }
 
         if(CONF.getBoolean("check_update")){
