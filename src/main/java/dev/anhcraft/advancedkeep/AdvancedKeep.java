@@ -22,6 +22,7 @@ import dev.anhcraft.craftkit.utils.ItemUtil;
 import dev.anhcraft.craftkit.utils.MaterialUtil;
 import dev.anhcraft.craftkit.utils.RecipeUtil;
 import dev.anhcraft.jvmkit.utils.*;
+import dev.anhcraft.jvmkit.utils.function.ByteArraySupplier;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -50,6 +51,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 
 public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener {
     private final YamlConfiguration CONF = new YamlConfiguration();
@@ -103,11 +105,14 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         File cf = new File(getDataFolder(), "config.yml");
         File df = new File(getDataFolder(), "death_chests.yml");
         try {
-            if(!cf.exists()) {
-                InputStream in = getResource("config.yml");
-                FileUtil.write(cf, in);
-                in.close();
-            }
+            FileUtil.init(cf, () -> {
+                try {
+                    return IOUtil.readResource(AdvancedKeep.class, "/config.yml");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return new byte[0];
+            });
             CONF.load(cf);
 
             if(df.exists())
