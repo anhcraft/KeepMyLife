@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>advancedkeep</artifactId>
-    <version>1.5.3</version>
+    <version>1.5.4</version>
     <packaging>jar</packaging>
 
     <name>AdvancedKeep</name>
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.1.8</version>
+            <version>1.1.9</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
