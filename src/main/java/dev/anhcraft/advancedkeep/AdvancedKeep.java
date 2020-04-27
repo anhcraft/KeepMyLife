@@ -16,6 +16,8 @@ import dev.anhcraft.craftkit.cb_common.nbt.CompoundTag;
 import dev.anhcraft.craftkit.chat.ActionBar;
 import dev.anhcraft.craftkit.chat.Chat;
 import dev.anhcraft.craftkit.common.utils.SpigotApiUtil;
+import dev.anhcraft.craftkit.common.utils.SpigotResourceInfo;
+import dev.anhcraft.craftkit.common.utils.VersionUtil;
 import dev.anhcraft.craftkit.helpers.ItemNBTHelper;
 import dev.anhcraft.craftkit.helpers.TaskHelper;
 import dev.anhcraft.craftkit.utils.ItemUtil;
@@ -71,6 +73,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     private boolean needUpdateDeathChestConf;
     private TaskHelper task;
     private Material deathChestMaterial;
+    public boolean debugMode;
 
     private int hashBlockLocation(Location location){
         return Objects.hash(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -234,11 +237,15 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
         if(CONF.getBoolean("check_update")){
             task.newDelayedAsyncTask(() -> {
-                int expect = SpigotApiUtil.getResourceLatestVersion("31673").chars().sum();
-                int current = getDescription().getVersion().chars().sum();
-                if(current < expect) {
-                    chat.messageConsole("&cThis plugin is outdated! Please update it <3");
-                    needUpdatePlugin = true;
+                try {
+                    String current = getDescription().getVersion();
+                    String expected = SpigotResourceInfo.of("31673").getCurrentVersion();
+                    if (VersionUtil.compareVersion(current, expected) < 0) {
+                        chat.messageConsole("&cThis plugin is outdated! Please update it <3");
+                        needUpdatePlugin = true;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }, 60); // okay wait for the task or get the f**king LinkageError
         }
@@ -429,7 +436,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         boolean soulGem = false;
         boolean deathChest = false;
         TimeKeep tk = WORLD2TIMEKEEP.get(p.getWorld().getName());
-        if(tk != null){
+        if(tk != null) {
             // oh be sure the player does not have those permissions, we do not want he loses his items only because his world is unsafe ~
             if(!keepItem) keepItem = tk.isKeepItem();
             if(!keepExp) keepExp = tk.isKeepExp();
@@ -438,6 +445,9 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
             if(landsHook != null){
                 ClaimStatus status = landsHook.getAreaStatus(p);
+                if(debugMode) {
+                    getLogger().info("Lands-hook, claim status: " + status.name());
+                }
                 switch (status) {
                     case WILD: {
                         if(tk.isKeepItemInLandsWilderness()) {
@@ -461,6 +471,9 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             }
             else if(townyHook != null){
                 ClaimStatus status = townyHook.getAreaStatus(p);
+                if(debugMode) {
+                    getLogger().info("Towny-hook, claim status: " + status.name());
+                }
                 switch (status) {
                     case WILD: {
                         if(tk.isKeepItemInTownyWilderness()) {
@@ -484,6 +497,9 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             }
             else if(saberFactionsHook != null){
                 ClaimStatus status = saberFactionsHook.getAreaStatus(p);
+                if(debugMode) {
+                    getLogger().info("SaberFactions-hook, claim status: " + status.name());
+                }
                 switch (status) {
                     case WILD: {
                         if(tk.isKeepItemInFactionWilderness()) {
@@ -505,6 +521,10 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                     }
                 }
             }
+        } else {
+            if(debugMode) {
+                getLogger().warning("Time keep not found for world " + p.getWorld().getName());
+            }
         }
 
         if(worldGuardHook != null) {
@@ -512,10 +532,27 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
             if(flags[0] != null) keepItem = flags[0];
             if(flags[1] != null) keepExp = flags[1];
             if(flags[2] != null) soulGem = flags[2];
+            if(debugMode) {
+                getLogger().info("World-Guard-hook, flags: " + flags[0] + ", " + flags[1] + ", " + flags[2]);
+            }
         }
 
-        if (p.hasPermission("keep.bypass.item")) keepItem = true;
-        if (p.hasPermission("keep.bypass.exp")) keepExp = true;
+        if (p.hasPermission("keep.bypass.item")) {
+            keepItem = true;
+            if(debugMode) {
+                getLogger().info("Item kept due to permission");
+            }
+        }
+        if (p.hasPermission("keep.bypass.exp")) {
+            keepExp = true;
+            if(debugMode) {
+                getLogger().info("Exp kept due to permission");
+            }
+        }
+
+        if(debugMode) {
+            getLogger().info("=> Result: " + String.format("Item: %s, Exp: %s, SoulGem: %s, DeathChest: %s", keepItem, keepExp, soulGem, deathChest));
+        }
 
         event.setKeepInventory(true);
         event.getDrops().clear(); // 1.14.4 fix

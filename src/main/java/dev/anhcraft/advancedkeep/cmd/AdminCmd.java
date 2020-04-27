@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 @CommandAlias("ak|keep")
 public class AdminCmd extends BaseCommand {
-    private AdvancedKeep instance;
+    private final AdvancedKeep instance;
 
     public AdminCmd(AdvancedKeep instance) {
         this.instance = instance;
@@ -100,5 +100,13 @@ public class AdminCmd extends BaseCommand {
     public void reload(CommandSender sender){
         instance.initConf();
         instance.chat.message(sender, "&bThe configuration was reloaded successfully!");
+    }
+
+    @Subcommand("debug")
+    @CommandPermission("keep.debug")
+    @Description("Enable/Disable debug")
+    public void debug(CommandSender sender){
+        instance.debugMode = !instance.debugMode;
+        instance.chat.message(sender, "&eDebug mode: " + instance.debugMode);
     }
 }
