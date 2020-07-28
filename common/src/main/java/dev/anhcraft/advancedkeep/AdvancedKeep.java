@@ -7,6 +7,8 @@ import dev.anhcraft.advancedkeep.api.events.PlayerKeepEvent;
 import dev.anhcraft.advancedkeep.api.events.SoulGemUseEvent;
 import dev.anhcraft.advancedkeep.cmd.AdminCmd;
 import dev.anhcraft.advancedkeep.integrations.*;
+import dev.anhcraft.advancedkeep.legacy.integrations.LegacyWorldGuardHook;
+import dev.anhcraft.advancedkeep.legacy.integrations.WorldGuardHook;
 import dev.anhcraft.confighelper.ConfigHelper;
 import dev.anhcraft.confighelper.ConfigSchema;
 import dev.anhcraft.confighelper.exception.InvalidValueException;
@@ -41,6 +43,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +75,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
     public boolean debugMode;
 
     private int hashBlockLocation(Location location){
-        return Objects.hash(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return Objects.hash(Objects.requireNonNull(location.getWorld()).getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     public void saveConf(){
@@ -125,26 +128,28 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         chat = new Chat(CONF.getString("message_prefix"));
 
         try {
-            soulGem = ConfigHelper.readConfig(CONF.getConfigurationSection("soul_gem.item"), PreparedItem.SCHEMA).build();
+            soulGem = ConfigHelper.readConfig(Objects.requireNonNull(CONF.getConfigurationSection("soul_gem.item")), PreparedItem.SCHEMA).build();
         } catch (InvalidValueException e) {
             e.printStackTrace();
         }
         ItemNBTHelper helper = ItemNBTHelper.of(soulGem);
-        helper.getTag().put(CONF.getString("soul_gem.nbt_tag"), System.currentTimeMillis());
+        helper.getTag().put(Objects.requireNonNull(CONF.getString("soul_gem.nbt_tag")), System.currentTimeMillis());
         soulGem = helper.save();
 
         WORLDGROUPS.clear();
         WORLD2GROUP.clear();
         WORLD2TIMEKEEP.clear();
         ConfigurationSection wgs = CONF.getConfigurationSection("world_groups");
-        for(String id : wgs.getKeys(false)) {
-            WorldGroup wg = new WorldGroup(id);
-            try {
-                ConfigHelper.readConfig(wgs.getConfigurationSection(id), ConfigSchema.of(WorldGroup.class), wg);
-            } catch (InvalidValueException e) {
-                e.printStackTrace();
+        if (wgs != null) {
+            for(String id : wgs.getKeys(false)) {
+                WorldGroup wg = new WorldGroup(id);
+                try {
+                    ConfigHelper.readConfig(Objects.requireNonNull(wgs.getConfigurationSection(id)), ConfigSchema.of(WorldGroup.class), wg);
+                } catch (InvalidValueException e) {
+                    e.printStackTrace();
+                }
+                addWorldGroup(wg);
             }
-            addWorldGroup(wg);
         }
 
         if(currentRecipe != null) RecipeUtil.unregister(currentRecipe);
@@ -160,8 +165,8 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         }
 
         for (String s : DC_CONF.getKeys(false)){
-            ConfigurationSection cs = DC_CONF.getConfigurationSection(s);
-            Location location = (Location) cs.get("location");
+            ConfigurationSection cs = Objects.requireNonNull(DC_CONF.getConfigurationSection(s));
+            Location location = Objects.requireNonNull((Location) cs.get("location"));
             UUID owner = new UUID(cs.getLong("owner.msb"), cs.getLong("owner.lsb"));
             long date = cs.getLong("date");
             List<ItemStack> items = (List<ItemStack>) cs.getList("items");
@@ -170,7 +175,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 getLogger().info(String.format("Invalid death chest at %s %s %s", b.getX(), b.getY(), b.getZ()));
                 if(items != null){
                     for (ItemStack item : items){
-                        location.getWorld().dropItemNaturally(location, item);
+                        Objects.requireNonNull(location.getWorld()).dropItemNaturally(location, item);
                     }
                 }
                 continue;
@@ -199,8 +204,14 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
     @Override
     public void onLoad(){
-        if(getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-            worldGuardHook = new WorldGuardHook();
+        Plugin pl = getServer().getPluginManager().getPlugin("WorldGuard");
+        if(pl != null) {
+            String str = pl.getDescription().getVersion().split("-")[0];
+            try {
+                worldGuardHook = VersionUtil.compareVersion(str, "7.0.0") >= 0 ? new ModernWorldGuardHook() : (WorldGuardHook) ReflectionUtil.invokeConstructor(Class.forName("dev.anhcraft.advancedkeep.legacy.integrations.LegacyWorldGuardHook"));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -277,7 +288,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                     if(dc.getItems() != null){
                         task.newTask(() -> {
                             for (ItemStack item : dc.getItems()){
-                                l.getWorld().dropItemNaturally(l, item);
+                                Objects.requireNonNull(l.getWorld()).dropItemNaturally(l, item);
                             }
                         });
                     }
@@ -285,7 +296,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
                 } else if(CONF.getBoolean("death_chest.signal_effect")) {
                     Location loc = dc.getLocation().clone();
                     int y = loc.getBlockY();
-                    int my = Math.min(loc.getWorld().getMaxHeight(), y + 25);
+                    int my = Math.min(Objects.requireNonNull(loc.getWorld()).getMaxHeight(), y + 25);
                     while (y < my){
                         loc.setY(y++);
                         loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 1, 0, 0, 0, 0, null);
@@ -329,7 +340,7 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
         if(itemStack == null) return false;
         CompoundTag compound = CompoundTag.of(itemStack);
         CompoundTag tag = compound.get("tag", CompoundTag.class);
-        return tag != null && tag.has(CONF.getString("soul_gem.nbt_tag"));
+        return tag != null && tag.has(Objects.requireNonNull(CONF.getString("soul_gem.nbt_tag")));
     }
 
     @Override
@@ -383,8 +394,8 @@ public final class AdvancedKeep extends JavaPlugin implements KeepAPI, Listener 
 
     @EventHandler
     public void interact(PlayerInteractEvent event){
-        if(event.hasBlock()){
-            Block b = event.getClickedBlock();
+        Block b = event.getClickedBlock();
+        if(b != null){
             int x = hashBlockLocation(b.getLocation());
             DeathChest dc = DEATHCHEST.get(x);
             if(dc != null) {

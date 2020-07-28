@@ -6,8 +6,13 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>advancedkeep</artifactId>
-    <version>1.5.5</version>
-    <packaging>jar</packaging>
+    <version>1.5.6</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>common</module>
+        <module>legacy</module>
+    </modules>
 
     <name>AdvancedKeep</name>
 
@@ -15,85 +20,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <build>
-        <defaultGoal>clean package</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <serverId>nexus</serverId>
-                    <nexusUrl>https://repo.anhcraft.dev/</nexusUrl>
-                    <skipStaging>true</skipStaging>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <configuration>
-                    <finalName>${project.artifactId}</finalName>
-                    <minimizeJar>false</minimizeJar>
-                    <relocations>
-                        <relocation>
-                            <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>dev.anhcraft.craftkit.acf</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>dev.anhcraft.confighelper</pattern>
-                            <shadedPattern>dev.anhcraft.craftkit.helpers.config</shadedPattern>
-                        </relocation>>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>dev.anhcraft.advancedkeep.bstats</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
 
     <repositories>
         <repository>
@@ -131,12 +57,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.Angeschossen</groupId>
             <artifactId>LandsAPI</artifactId>
             <version>4.8.6</version>
@@ -146,12 +66,6 @@
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
             <version>1.2.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

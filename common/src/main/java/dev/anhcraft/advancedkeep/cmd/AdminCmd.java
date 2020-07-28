@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 @CommandAlias("ak|keep")
 public class AdminCmd extends BaseCommand {
     private final AdvancedKeep instance;
@@ -70,7 +72,7 @@ public class AdminCmd extends BaseCommand {
         for (DeathChest dc : instance.DEATHCHEST.values()){
             if(dc.getOwner().equals(target.getUniqueId())) {
                 Location l = dc.getLocation();
-                instance.chat.message(sender, "&aWorld: "+l.getWorld().getName()+"; X/Y/Z: "+l.getBlockX()+" "+l.getBlockY()+" "+l.getBlockZ());
+                instance.chat.message(sender, "&aWorld: "+ Objects.requireNonNull(l.getWorld()).getName()+"; X/Y/Z: "+l.getBlockX()+" "+l.getBlockY()+" "+l.getBlockZ());
                 b = true;
             }
         }

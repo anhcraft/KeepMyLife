@@ -6,9 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="AdvancedKeep" />
-        <module name="advancedkeep" />
+        <module name="advancedkeep.legacy" />
+        <module name="advancedkeep.common" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="AdvancedKeep" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="legacy" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

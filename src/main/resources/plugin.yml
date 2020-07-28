@@ -1,9 +1,0 @@
-name: AdvancedKeep
-version: ${project.version}
-main: dev.anhcraft.advancedkeep.AdvancedKeep
-authors: [anhcraft]
-depend: [CraftKit]
-softdepend: [WorldEdit,WorldGuard,Lands,Towny,Factions]
-description: ${project.description}
-website: https://anhcraft.dev/
-api-version: "1.13"
