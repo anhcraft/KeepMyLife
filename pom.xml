@@ -6,7 +6,7 @@
 
     <groupId>dev.anhcraft</groupId>
     <artifactId>advancedkeep</artifactId>
-    <version>1.5.4</version>
+    <version>1.5.5</version>
     <packaging>jar</packaging>
 
     <name>AdvancedKeep</name>
@@ -97,8 +97,8 @@
 
     <repositories>
         <repository>
-            <id>anhcraft-repo</id>
-            <url>https://repo.anhcraft.dev/repository/mvn/</url>
+            <id>mcvn-repo</id>
+            <url>https://repo.minecraftvn.net/repository/maven-public/</url>
         </repository>
         <repository>
             <id>spigotmc-repo</id>
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>dev.anhcraft</groupId>
             <artifactId>craftkit.spigot</artifactId>
-            <version>1.1.9</version>
+            <version>1.2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
