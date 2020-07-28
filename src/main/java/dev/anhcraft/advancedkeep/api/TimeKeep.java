@@ -1,6 +1,7 @@
 package dev.anhcraft.advancedkeep.api;
 
 import com.google.common.base.Preconditions;
+import dev.anhcraft.confighelper.annotation.IgnoreValue;
 import dev.anhcraft.confighelper.annotation.Key;
 import dev.anhcraft.confighelper.annotation.PrettyEnum;
 import dev.anhcraft.confighelper.annotation.Schema;
@@ -13,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("FieldMayBeFinal")
 @Schema
 public class TimeKeep {
-    private String id;
-    private WeakReference<WorldGroup> worldGroup;
+    private final String id;
+    private final WeakReference<WorldGroup> worldGroup;
 
     @Key("from")
     private long from;
@@ -25,6 +27,7 @@ public class TimeKeep {
     private long to;
 
     @Key("broadcast.chat")
+    @IgnoreValue(ifNull = true)
     private List<String> chatBroadcast = new ArrayList<>();
 
     @Key("broadcast.action_bar")
