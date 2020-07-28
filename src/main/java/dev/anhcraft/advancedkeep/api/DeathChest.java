@@ -9,10 +9,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class DeathChest {
-    private String id;
-    private UUID owner;
-    private Location location;
-    private long date;
+    private final String id;
+    private final UUID owner;
+    private final Location location;
+    private final long date;
     private List<ItemStack> items;
 
     public DeathChest(@NotNull String id, @NotNull UUID owner, @NotNull Location location, long date, @Nullable List<ItemStack> items) {

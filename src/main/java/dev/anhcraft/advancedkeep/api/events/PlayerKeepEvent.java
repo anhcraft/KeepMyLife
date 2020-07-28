@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class PlayerKeepEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();
-    private List<ItemStack> dropItems;
-    private List<ItemStack> keepItems;
+    private final List<ItemStack> dropItems;
+    private final List<ItemStack> keepItems;
     private boolean keepExp;
 
     public PlayerKeepEvent(@NotNull Player player, @NotNull List<ItemStack> dropItems, @NotNull List<ItemStack> keepItems, boolean keepExp) {

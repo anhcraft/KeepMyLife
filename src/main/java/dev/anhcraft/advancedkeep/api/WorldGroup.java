@@ -16,9 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("FieldMayBeFinal")
 @Schema
 public class WorldGroup {
-    private String id;
+    private final String id;
 
     @Key("worlds")
     private List<String> worlds = new ArrayList<>();
